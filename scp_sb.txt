@@ -1,0 +1,7 @@
+"scp_sb"
+{
+	"base"		"base"
+	"title"		"SCP - Site Breach"
+	"maps"		"^scp_"
+	"menusystem"	"1"
+}
