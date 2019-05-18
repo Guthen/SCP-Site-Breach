@@ -4,7 +4,7 @@
 -----------------------------
 
 concommand.Add( "scpsb_getmodels", function()
-    local fol = "models/player/"
+    local fol = "models/props/scp/firstaidkit/"
     local mdls, folders = file.Find( fol .. "*", "GAME" )
 
     for _, v in pairs( folders ) do
