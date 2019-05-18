@@ -10,16 +10,20 @@ function GM:RoundStart()
 end
 
 function GM:PreCleanupMap()
-    RunConsoleCommand( "scpsb_save_entities_spawner" )
 end
 
+--------------------------
+--  > PostCleanupMap <  --
+--------------------------
 function GM:PostCleanupMap()
-    RunConsoleCommand( "scpsb_load_entities_spawner" )
+    RunConsoleCommand( "scpsb_load_entities_spawner" ) -- load entities spawner
+    RunConsoleCommand( "scpsb_load_teams_spawner" ) -- load teams spawner
 
-    for _, v in pairs( ents.FindByClass( "scp_sb_entity_spawner" ) ) do
-        v:SpawnClassEntity()
-        print( v )
-    end
+    timer.Simple( 1, function()
+        for _, v in pairs( ents.FindByClass( "scp_sb_entity_spawner" ) ) do -- spawn class entity at cleanup
+            v:SpawnClassEntity()
+        end
+    end )
 end
 
 -----------------------
@@ -77,7 +81,7 @@ end
 --  > PlayerDeathSound <  --
 ----------------------------
 function GM:PlayerDeathSound( ply )
-    ply:EmitSound( "guthen_scp/player/Die" .. math.random( 1, 3 ) .. ".ogg" )
+    if not ply:IsSpectator() then ply:EmitSound( "guthen_scp/player/Die" .. math.random( 1, 3 ) .. ".ogg" ) end
     return true
 end
 

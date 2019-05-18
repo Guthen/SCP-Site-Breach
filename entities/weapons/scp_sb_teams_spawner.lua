@@ -1,6 +1,6 @@
-SWEP.PrintName			    = "SCP:SB - Entities Spawner" -- This will be shown in the spawn menu, and in the weapon selection menu
+SWEP.PrintName			    = "SCP:SB - Teams Spawner" -- This will be shown in the spawn menu, and in the weapon selection menu
 SWEP.Author			        = "Guthen" -- These two options will be shown when you have the weapon highlighted in the weapon selection menu
-SWEP.Instructions		    = "Left click to add an entity spawn. Right click to remove an entity spawn. Reload to change an entity class."
+SWEP.Instructions		    = "Left click to add an team spawn. Right click to remove an team spawn. Reload to change the selected team."
 
 SWEP.Spawnable              = true
 SWEP.AdminOnly              = true
@@ -28,14 +28,8 @@ SWEP.ViewModel			    = "models/weapons/v_pistol.mdl"
 SWEP.WorldModel			    = "models/weapons/w_pistol.mdl"
 
 --  > Variables <  --
-local entities =
-    {
-        "item_healthkit",
-        "item_healthvial",
-        "item_battery",
-        "item_ammo_pistol",
-    }
-local curEnt = 1
+local teams = SCPSiteBreach.GetTeams()
+local curTeam = 1
 
 --  > Functions <  --
 
@@ -47,12 +41,12 @@ function SWEP:PrimaryAttack() -- create entities spawner
 
     if CLIENT then return end -- CLIENT can't create entities
 
-    local ent = ents.Create( "scp_sb_entity_spawner" )
+    local ent = ents.Create( "scp_sb_team_spawner" )
           if not ent:IsValid() then return end
           ent:SetPos( ply:GetEyeTrace().HitPos + Vector( 0, 0, 10 ) )
           ent:SetAngles( Angle( 0, ply:GetAngles().y, 0 ) )
           ent:Spawn()
-          ent:SetClassEntity( entities[curEnt] )
+          ent:SetTeamID( curTeam )
 end
 
 function SWEP:SecondaryAttack() -- remove entities spawner in sphere
@@ -63,7 +57,7 @@ function SWEP:SecondaryAttack() -- remove entities spawner in sphere
 
     local _ents = ents.FindInSphere( ply:GetEyeTrace().HitPos, 10 )
     for _, v in pairs( _ents ) do
-        if v:GetClass() == "scp_sb_entity_spawner" then v:Remove() end
+        if v:GetClass() == "scp_sb_team_spawner" then v:Remove() end
     end
 end
 
@@ -71,13 +65,13 @@ local canReload = true
 function SWEP:Reload()
     if not canReload then return end
 
-    curEnt = curEnt >= #entities and 1 or curEnt + 1
+    curTeam = curTeam >= #teams and 1 or curTeam + 1
 
     canReload = false
     timer.Simple( .5, function() canReload = true end )
 end
 
 function SWEP:DrawHUD()
-    draw.SimpleText( "Current Entity: " .. entities[curEnt], "DermaDefault", ScrW()/2+50, ScrH()/2, Color( 255, 255, 255 ), TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER )
-    draw.SimpleText( "# Entities Spawners: " .. #ents.FindByClass( "scp_sb_entity_spawner" ), "DermaDefault", ScrW()/2+50, ScrH()/2+15, Color( 255, 255, 255 ), TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER )
+    draw.SimpleText( "Current Team: " .. team.GetName( curTeam ), "DermaDefault", ScrW()/2+50, ScrH()/2, Color( 255, 255, 255 ), TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER )
+    draw.SimpleText( "# Teams Spawners: " .. #ents.FindByClass( "scp_sb_team_spawner" ), "DermaDefault", ScrW()/2+50, ScrH()/2+15, Color( 255, 255, 255 ), TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER )
 end

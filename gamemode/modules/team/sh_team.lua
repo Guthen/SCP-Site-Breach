@@ -50,6 +50,7 @@ TEAM_SPECTATOR = SCPSiteBreach.AddTeam( "Spectator",
         weapons =
             {
                 "scp_sb_entities_spawner",
+                "scp_sb_teams_spawner",
             },
         color = Color( 109, 109, 109 ),
         health = 0,
@@ -124,7 +125,9 @@ TEAM_GUARD = SCPSiteBreach.AddTeam( "Guard",
     } )
 
 --  > Load Teams <  --
+SCPSiteBreach.teamsSpawns = SCPSiteBreach.teamsSpawns or {}
 for k, v in pairs( SCPSiteBreach.teams ) do
+    SCPSiteBreach.teamsSpawns[ k ] = {}
     team.SetUp( k, v.name or "Unnamed", v.color or Color( 50, 50, 50 ) )
 end
 
