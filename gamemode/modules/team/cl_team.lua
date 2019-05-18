@@ -10,6 +10,7 @@ end
 
 --  > HUD <  --
 net.Receive( "SCPSiteBreach:TeamHUD", function()
+    if not LocalPlayer():IsValid() then return end
     local s = 500
     local _team = LocalPlayer():Team()
     local _teamColor = team.GetColor( _team )

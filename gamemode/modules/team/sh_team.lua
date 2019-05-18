@@ -47,7 +47,10 @@ TEAM_SPECTATOR = SCPSiteBreach.AddTeam( "Spectator",
             {
                 "models/player/combine_soldier.mdl",
             },
-        weapons = {},
+        weapons =
+            {
+                "scp_sb_entities_spawner",
+            },
         color = Color( 109, 109, 109 ),
         health = 0,
         armor = 0,
@@ -60,7 +63,13 @@ TEAM_CLASSD = SCPSiteBreach.AddTeam( "Class-D",
     {
         models =
             {
-                "models/player/aperture_science/male_09.mdl",
+                "models/player/humans/class_d/class_d_1.mdl",
+                "models/player/humans/class_d/class_d_2.mdl",
+                "models/player/humans/class_d/class_d_3.mdl",
+                "models/player/humans/class_d/class_d_4.mdl",
+                "models/player/humans/class_d/class_d_5.mdl",
+                "models/player/humans/class_d/class_d_6.mdl",
+                "models/player/humans/class_d/class_d_7.mdl",
             },
         weapons = {},
         color = Color( 244, 142, 65 ),
@@ -77,15 +86,13 @@ TEAM_SCIENTIST = SCPSiteBreach.AddTeam( "Scientist",
     {
         models =
             {
-                "models/player/scpsci_male_01.mdl",
-                "models/player/scpsci_male_02.mdl",
-                "models/player/scpsci_male_03.mdl",
-                "models/player/scpsci_male_04.mdl",
-                "models/player/scpsci_male_05.mdl",
-                "models/player/scpsci_male_06.mdl",
-                "models/player/scpsci_male_07.mdl",
-                "models/player/scpsci_male_08.mdl",
-                "models/player/scpsci_male_09.mdl",
+                "models/player/humans/class_scientist/class_scientist_1.mdl",
+                "models/player/humans/class_scientist/class_scientist_2.mdl",
+                "models/player/humans/class_scientist/class_scientist_3.mdl",
+                "models/player/humans/class_scientist/class_scientist_4.mdl",
+                "models/player/humans/class_scientist/class_scientist_5.mdl",
+                "models/player/humans/class_scientist/class_scientist_6.mdl",
+                "models/player/humans/class_scientist/class_scientist_7.mdl",
             },
         weapons = {},
         color = Color( 244, 211, 65 ),
@@ -102,7 +109,7 @@ TEAM_GUARD = SCPSiteBreach.AddTeam( "Guard",
     {
         models =
             {
-                "models/player/swat.mdl",
+                "models/player/humans/class_scientist/class_securety/class_securety.mdl",
             },
         weapons =
             {
@@ -120,3 +127,10 @@ TEAM_GUARD = SCPSiteBreach.AddTeam( "Guard",
 for k, v in pairs( SCPSiteBreach.teams ) do
     team.SetUp( k, v.name or "Unnamed", v.color or Color( 50, 50, 50 ) )
 end
+
+-- models/player/scp/035/scp.mdl
+-- models/props/scp/scp035/035_mask.mdl
+-- models/player/scp/049/scp.mdl
+-- models/player/scp/106/scp.mdl
+-- models/player/scp/966/scp.mdl
+-- models/player/scp/939/scp.mdl

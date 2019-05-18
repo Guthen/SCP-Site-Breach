@@ -5,6 +5,23 @@
 
 --  > Gamemode Hooks <  --
 
+function GM:RoundStart()
+
+end
+
+function GM:PreCleanupMap()
+    RunConsoleCommand( "scpsb_save_entities_spawner" )
+end
+
+function GM:PostCleanupMap()
+    RunConsoleCommand( "scpsb_load_entities_spawner" )
+
+    for _, v in pairs( ents.FindByClass( "scp_sb_entity_spawner" ) ) do
+        v:SpawnClassEntity()
+        print( v )
+    end
+end
+
 -----------------------
 --  > PlayerSpawn <  --
 -----------------------

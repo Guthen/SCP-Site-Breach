@@ -16,7 +16,14 @@ concommand.Add( "scpsb_getmodels", function()
 end )
 
 concommand.Add( "scpsb_cleanup", function( ply )
-    if ply:IsSuperAdmin() then game.CleanUpMap() end
+    if not ply:IsValid() or ply:IsSuperAdmin() then game.CleanUpMap() end
+end )
+
+concommand.Add( "scpsb_unspectator", function( ply )
+    if not ply:IsSuperAdmin() then return end
+
+    ply:SetNWBool( "SCPSiteBreach:IsSpectator", false )
+    ply:Spawn()
 end )
 
 concommand.Add( "scpsb_kill", function( ply )
@@ -26,4 +33,56 @@ concommand.Add( "scpsb_kill", function( ply )
     if not ent:IsValid() or not ent:IsPlayer() then return end
 
     ent:Kill()
+end )
+
+concommand.Add( "scpsb_save_entities_spawner", function( ply )
+    if ply:IsValid() and not ply:IsSuperAdmin() then return print( "SCPSiteBreach - " .. ply:Name() .. " is not allowed to load entities spawner." ) end
+    if CLIENT then return end
+
+    if not file.Exists( "scp_sb", "DATA" ) then -- create dir if not exists
+        file.CreateDir( "scp_sb" )
+    end
+
+    local _ents = {}
+    local i = 0 -- get number of saved entities
+    for _, v in pairs( ents.FindByClass( "scp_sb_entity_spawner" ) ) do -- add data to a table
+        table.insert( _ents, { pos = v:GetPos(), ang = v:GetAngles(), class = v:GetClassEntity() } )
+        i = i + 1
+    end
+
+    file.Write( "scp_sb/entities_spawner.txt", util.TableToJSON( _ents ) ) -- save table to json
+    print( "SCPSiteBreach - All Entities Spawner have been saved (" .. i .. " entities)" )
+end )
+
+concommand.Add( "scpsb_load_entities_spawner", function( ply )
+    if ply:IsValid() and not ply:IsSuperAdmin() then return print( "SCPSiteBreach - " .. ply:Name() .. " is not allowed to load entities spawner." ) end
+    if CLIENT then return end
+
+    if not file.Exists( "scp_sb", "DATA" ) then -- create dir if not exists
+        return print( "SCPSiteBreach - Directory doesn't exists" )
+    end
+
+    if not file.Exists( "scp_sb/entities_spawner.txt", "DATA" ) then -- create dir if not exists
+        return print( "SCPSiteBreach - File doesn't exists" )
+    end
+
+    local _ents = file.Read( "scp_sb/entities_spawner.txt", "DATA" ) -- read data
+    _ents = util.JSONToTable( _ents )
+
+    for _, v in pairs( ents.FindByClass( "scp_sb_entity_spawner" ) ) do -- remove all others entities
+        v:Remove()
+    end
+
+    local i = 0
+    for _, v in pairs( _ents ) do -- spawn the entities
+        local ent = ents.Create( "scp_sb_entity_spawner" )
+              ent:SetPos( v.pos )
+              ent:SetAngles( v.ang )
+              ent:Spawn()
+              ent:SetClassEntity( v.class )
+
+        i = i + 1
+    end
+
+    print( "SCPSiteBreach - All Entities Spawner have been loaded (" .. i .. " entities)" )
 end )

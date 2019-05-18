@@ -24,6 +24,7 @@ function Player:ChangeTeam( _team )
 
     self:StripWeapons()
     for _, v in pairs( teamTab.weapons ) do -- weapons
+        if weapons.Get( v ).AdminOnly and not self:IsAdmin() then continue end
         self:Give( v )
     end
 

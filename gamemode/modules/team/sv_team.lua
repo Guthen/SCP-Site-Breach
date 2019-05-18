@@ -15,7 +15,7 @@ util.AddNetworkString( "SCPSiteBreach:TeamHUD" )
 --  > Server Hooks <  --
 
 hook.Add( "PlayerSpawn", "SCPSiteBreach:TeamHUD", function( ply )
-    timer.Simple( .1, function()
+    timer.Simple( .2, function()
         net.Start( "SCPSiteBreach:TeamHUD" )
         net.Send( ply )
     end )
