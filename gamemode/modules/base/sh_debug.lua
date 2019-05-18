@@ -18,3 +18,12 @@ end )
 concommand.Add( "scpsb_cleanup", function( ply )
     if ply:IsSuperAdmin() then game.CleanUpMap() end
 end )
+
+concommand.Add( "scpsb_kill", function( ply )
+    if not ply:IsSuperAdmin() then return end
+
+    local ent = ply:GetEyeTrace().Entity
+    if not ent:IsValid() or not ent:IsPlayer() then return end
+
+    ent:Kill()
+end )

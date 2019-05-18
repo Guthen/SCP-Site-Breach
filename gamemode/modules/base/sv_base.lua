@@ -5,41 +5,46 @@
 
 --  > Gamemode Hooks <  --
 
--------------------------
---  > -- Players -- <  --
--------------------------
-
 -----------------------
 --  > PlayerSpawn <  --
 -----------------------
 function GM:PlayerSpawn( ply )
     player_manager.SetPlayerClass( ply, "player_default" )
 
+    --  > Hands <  --
+    ply:SetupHands()
+
     --  > Team <  --
-    local team = math.random( #SCPSiteBreach.GetTeams() )
-    local teamTab = SCPSiteBreach.GetTeam( team )
-    if not teamTab then return print( "SCPSiteBreach - Failed to get Team " .. team .. " informations" ) end
-
-    ply:SetModel( table.Random( teamTab.models ) ) -- model
-
-    ply:SetWalkSpeed( teamTab.walkSpd or 150 ) -- walk speed
-    ply:SetRunSpeed( teamTab.runSpd or 250 ) -- run speed
-
-    ply:SetHealth( teamTab.health or 100 ) -- health
-    ply:SetMaxHealth( teamTab.health or 100 ) -- max health
-    ply:SetArmor( teamTab.armor or 100 ) -- armor
-
-    for _, v in pairs( teamTab.weapons ) do -- weapons
-        ply:Give( v )
+    local _team = team.BestAutoJoinTeam()
+    if not ply:IsSpectator() then -- don't be a spectator if you haven't played
+        while _team == TEAM_SPECTATOR do
+            _team = math.random( #SCPSiteBreach.GetTeams() )
+        end
+        ply:GodDisable()
+    else
+        _team = TEAM_SPECTATOR
+        ply:GodEnable()
     end
 
-    print( ply:Name() .. " has joined Team " .. team  )
+    ply:ChangeTeam( _team ) -- sv_players.lua
 end
 
 -----------------------
 --  > PlayerDeath <  --
 -----------------------
 function GM:PlayerDeath( ply, inf, atk )
+
+    --  > Ragdoll <  --
+    local ragdoll = ply:GetRagdollEntity()
+    if ragdoll and ragdoll:IsValid() then
+        ragdoll:Remove()
+
+        if ply:IsSpectator() then return end
+        local _ragdoll = ents.Create( "prop_ragdoll" )
+              _ragdoll:SetModel( ply:GetModel() )
+              _ragdoll:SetPos( ply:GetPos() )
+              _ragdoll:Spawn()
+    end
     --  > Weapons <  --
     local weaps = ply:GetWeapons()
     for k, v in pairs( weaps ) do
@@ -47,22 +52,15 @@ function GM:PlayerDeath( ply, inf, atk )
               weap:SetPos( ply:GetPos() + Vector( 0, 0, 25+5*k ) )
               weap:Spawn()
     end
-    --  > Ragdoll <  --
-    local ragdoll = ply:GetRagdollEntity()
-    if ragdoll and ragdoll:IsValid() then
-        ragdoll:Remove()
-
-        local _ragdoll = ents.Create( "prop_ragdoll" )
-              _ragdoll:SetModel( ply:GetModel() )
-              _ragdoll:SetPos( ply:GetPos() )
-              _ragdoll:Spawn()
-    end
+    --  > Var <  --
+    ply:SetNWBool( "SCPSiteBreach:IsSpectator", true )
 end
 
 ----------------------------
 --  > PlayerDeathSound <  --
 ----------------------------
-function GM:PlayerDeathSound()
+function GM:PlayerDeathSound( ply )
+    ply:EmitSound( "guthen_scp/player/Die" .. math.random( 1, 3 ) .. ".ogg" )
     return true
 end
 
@@ -70,11 +68,25 @@ end
 --  > PlayerFootstep <  --
 --------------------------
 function GM:PlayerFootstep( ply, _, foot, sound )
-    local id = (foot+1) * math.random( 1, 4 )
+    local id = (foot+1) * math.random( 1, 4 ) -- sound id
 
     local mat = ""
-    if string.find( sound, "metal" ) then mat = "Metal" end
+    if string.find( sound, "metal" ) then mat = "Metal" end -- if metal
 
-    ply:EmitSound( "guthen_scp/player/Step" .. mat .. id ) -- play walk footstep sound
+    local run = "Step"
+    local vel = ply:GetVelocity():Length()
+    if ply:GetRunSpeed()-2 < vel and vel < ply:GetRunSpeed()+2 then run = "Run" end -- if run
+
+    local snd = "guthen_scp/player/" .. run .. mat .. id .. ".ogg"
+    ply:EmitSound( snd ) -- play footstep sound
     return true
+end
+
+-------------------------------------
+--  > PlayerCanHearPlayersVoice <  --
+-------------------------------------
+function GM:PlayerCanHearPlayersVoice( list, talk )
+    if list:IsSpectator() and talk:IsSpectator() then return true end -- spectators
+    if list:GetPos():DistToSqr( talk:GetPos() ) < 500*500 then return true, true end -- distance
+    return false
 end
