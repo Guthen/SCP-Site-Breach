@@ -5,10 +5,6 @@
 
 --  > Gamemode Hooks <  --
 
-function GM:RoundStart()
-
-end
-
 function GM:PreCleanupMap()
 end
 
@@ -32,19 +28,22 @@ end
 function GM:PlayerSpawn( ply )
     player_manager.SetPlayerClass( ply, "player_default" )
 
+    --  > UnSpectate <  --
+    ply:UnSpectate()
+
     --  > Hands <  --
     ply:SetupHands()
 
     --  > Team <  --
-    local _team = team.BestAutoJoinTeam()
+    local _team = SCPSiteBreach.chooseTeam()
+    if _team == TEAM_UNASSIGNED then _team = 1 end
     if not ply:IsSpectator() then -- don't be a spectator if you haven't played
         while _team == TEAM_SPECTATOR do
             _team = math.random( #SCPSiteBreach.GetTeams() )
         end
         ply:GodDisable()
     else
-        _team = TEAM_SPECTATOR
-        ply:GodEnable()
+        return
     end
 
     ply:ChangeTeam( _team ) -- sv_players.lua
@@ -54,7 +53,6 @@ end
 --  > PlayerDeath <  --
 -----------------------
 function GM:PlayerDeath( ply, inf, atk )
-
     --  > Ragdoll <  --
     local ragdoll = ply:GetRagdollEntity()
     if ragdoll and ragdoll:IsValid() then
@@ -73,15 +71,17 @@ function GM:PlayerDeath( ply, inf, atk )
               weap:SetPos( ply:GetPos() + Vector( 0, 0, 25+5*k ) )
               weap:Spawn()
     end
+    --  > Sound <  --
+    if not ply:IsSpectator() then ply:EmitSound( "guthen_scp/player/Die" .. math.random( 2, 3 ) .. ".ogg" ) end
+
     --  > Var <  --
-    ply:SetNWBool( "SCPSiteBreach:IsSpectator", true )
+    ply:SetSpectator( true )
 end
 
 ----------------------------
 --  > PlayerDeathSound <  --
 ----------------------------
 function GM:PlayerDeathSound( ply )
-    if not ply:IsSpectator() then ply:EmitSound( "guthen_scp/player/Die" .. math.random( 1, 3 ) .. ".ogg" ) end
     return true
 end
 

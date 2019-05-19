@@ -15,6 +15,13 @@ concommand.Add( "scpsb_getmodels", function()
     end
 end )
 
+concommand.Add( "scpsb_round_start", function( ply )
+    if ply:IsValid() and not ply:IsSuperAdmin() then return end
+    if CLIENT then return end
+
+    GAMEMODE:RoundStart()
+end )
+
 concommand.Add( "scpsb_config", function( ply )
     if not ply:IsValid() or not ply:IsSuperAdmin() then return end
     if not ply:IsSpectator() then return CLIENT and print( "You must be Spectator to config !" ) end
