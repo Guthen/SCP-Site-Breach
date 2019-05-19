@@ -47,11 +47,7 @@ TEAM_SPECTATOR = SCPSiteBreach.AddTeam( "Spectator",
             {
                 "models/player/combine_soldier.mdl",
             },
-        weapons =
-            {
-                "scp_sb_entities_spawner",
-                "scp_sb_teams_spawner",
-            },
+        weapons = {},
         color = Color( 109, 109, 109 ),
         health = 0,
         armor = 0,

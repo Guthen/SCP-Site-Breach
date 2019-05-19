@@ -2,6 +2,6 @@
 {
 	"base"		"base"
 	"title"		"SCP - Site Breach"
-	"maps"		"^scp_"
+	"maps"		"^scp_sb_"
 	"menusystem"	"1"
 }

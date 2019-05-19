@@ -15,6 +15,14 @@ concommand.Add( "scpsb_getmodels", function()
     end
 end )
 
+concommand.Add( "scpsb_config", function( ply )
+    if not ply:IsValid() or not ply:IsSuperAdmin() then return end
+    if not ply:IsSpectator() then return CLIENT and print( "You must be Spectator to config !" ) end
+
+    ply:Give( "scp_sb_teams_spawner" )
+    ply:Give( "scp_sb_entities_spawner" )
+end )
+
 concommand.Add( "scpsb_cleanup", function( ply )
     if not ply:IsValid() or ply:IsSuperAdmin() then game.CleanUpMap() end
 end )
@@ -45,14 +53,18 @@ concommand.Add( "scpsb_save_entities_spawner", function( ply )
         file.CreateDir( "scp_sb" )
     end
 
+    if not file.Exists( "scp_sb/" .. game.GetMap(), "DATA" ) then -- create dir if not exists
+        file.CreateDir( "scp_sb/" .. game.GetMap() )
+    end
+
     local _ents = {}
     local i = 0 -- get number of saved entities
     for _, v in pairs( ents.FindByClass( "scp_sb_entity_spawner" ) ) do -- add data to a table
-        table.insert( _ents, { pos = v:GetPos(), ang = v:GetAngles(), class = v:GetClassEntity() } )
+        table.insert( _ents, { pos = v:GetPos(), ang = v:GetAngles(), class = v:GetClassEntity(), chance = v:GetChance() or 1 } )
         i = i + 1
     end
 
-    file.Write( "scp_sb/entities_spawner.txt", util.TableToJSON( _ents ) ) -- save table to json
+    file.Write( "scp_sb/" .. game.GetMap() .. "/entities_spawner.txt", util.TableToJSON( _ents ) ) -- save table to json
     print( "SCPSiteBreach - All Entities Spawner have been saved (" .. i .. " entities)" )
 end )
 
@@ -64,11 +76,15 @@ concommand.Add( "scpsb_load_entities_spawner", function( ply )
         return print( "SCPSiteBreach - Directory doesn't exists" )
     end
 
-    if not file.Exists( "scp_sb/entities_spawner.txt", "DATA" ) then -- create dir if not exists
+    if not file.Exists( "scp_sb/" .. game.GetMap(), "DATA" ) then -- create dir if not exists
+        return print( "SCPSiteBreach - Map Directory doesn't exists" )
+    end
+
+    if not file.Exists( "scp_sb/" .. game.GetMap() .. "/entities_spawner.txt", "DATA" ) then -- create dir if not exists
         return print( "SCPSiteBreach - File doesn't exists" )
     end
 
-    local _ents = file.Read( "scp_sb/entities_spawner.txt", "DATA" ) -- read data
+    local _ents = file.Read( "scp_sb/" .. game.GetMap() .. "/entities_spawner.txt", "DATA" ) -- read data
     _ents = util.JSONToTable( _ents )
 
     for _, v in pairs( ents.FindByClass( "scp_sb_entity_spawner" ) ) do -- remove all others entities
@@ -82,6 +98,7 @@ concommand.Add( "scpsb_load_entities_spawner", function( ply )
               ent:SetAngles( v.ang )
               ent:Spawn()
               ent:SetClassEntity( v.class )
+              ent:SetChance( v.chance )
 
         i = i + 1
     end
@@ -99,6 +116,10 @@ concommand.Add( "scpsb_save_teams_spawner", function( ply )
         file.CreateDir( "scp_sb" )
     end
 
+    if not file.Exists( "scp_sb/" .. game.GetMap(), "DATA" ) then -- create dir if not exists
+        file.CreateDir( "scp_sb/" .. game.GetMap() )
+    end
+
     local _ents = {}
     local i = 0 -- get number of saved entities
     for _, v in pairs( ents.FindByClass( "scp_sb_team_spawner" ) ) do -- add data to a table
@@ -106,7 +127,7 @@ concommand.Add( "scpsb_save_teams_spawner", function( ply )
         i = i + 1
     end
 
-    file.Write( "scp_sb/teams_spawner.txt", util.TableToJSON( _ents ) ) -- save table to json
+    file.Write( "scp_sb/" .. game.GetMap() .. "/teams_spawner.txt", util.TableToJSON( _ents ) ) -- save table to json
     print( "SCPSiteBreach - All Teams Spawner have been saved (" .. i .. " entities)" )
 end )
 
@@ -118,11 +139,15 @@ concommand.Add( "scpsb_load_teams_spawner", function( ply )
         return print( "SCPSiteBreach - Directory doesn't exists" )
     end
 
-    if not file.Exists( "scp_sb/teams_spawner.txt", "DATA" ) then -- create dir if not exists
+    if not file.Exists( "scp_sb/" .. game.GetMap(), "DATA" ) then -- create dir if not exists
+        return print( "SCPSiteBreach - Map Directory doesn't exists" )
+    end
+
+    if not file.Exists( "scp_sb/" .. game.GetMap() .. "/teams_spawner.txt", "DATA" ) then -- create dir if not exists
         return print( "SCPSiteBreach - File doesn't exists" )
     end
 
-    local _ents = file.Read( "scp_sb/teams_spawner.txt", "DATA" ) -- read data
+    local _ents = file.Read( "scp_sb/" .. game.GetMap() .. "/teams_spawner.txt", "DATA" ) -- read data
     _ents = util.JSONToTable( _ents )
 
     for _, v in pairs( ents.FindByClass( "scp_sb_team_spawner" ) ) do -- remove all others entities

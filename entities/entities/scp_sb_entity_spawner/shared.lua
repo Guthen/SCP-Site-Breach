@@ -7,4 +7,5 @@ ENT.Spawnable 		= false
 
 function ENT:SetupDataTables()
     self:NetworkVar( "String", 0, "ClassEntity" )
+    self:NetworkVar( "Float", 0, "Chance" )
 end

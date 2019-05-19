@@ -3,6 +3,11 @@
 --   > sh_players.lua <    --
 -----------------------------
 
+--  > Network <  --
+util.AddNetworkString( "SCPSiteBreach:SetBottomMessage" )
+
+--  > Meta <  --
+
 local Player = FindMetaTable( "Player" )
 
 --  > Player Functions <  --

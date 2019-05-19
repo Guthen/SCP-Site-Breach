@@ -98,6 +98,8 @@ function GM:PlayerFootstep( ply, _, foot, sound )
     local vel = ply:GetVelocity():Length()
     if ply:GetRunSpeed()-2 < vel and vel < ply:GetRunSpeed()+2 then run = "Run" end -- if run
 
+    if vel < 100 then return true end -- don't play sound if crouch walk
+
     local snd = "guthen_scp/player/" .. run .. mat .. id .. ".ogg"
     ply:EmitSound( snd ) -- play footstep sound
     return true
