@@ -14,6 +14,7 @@ end
 function GM:PostCleanupMap()
     RunConsoleCommand( "scpsb_load_entities_spawner" ) -- load entities spawner
     RunConsoleCommand( "scpsb_load_teams_spawner" ) -- load teams spawner
+    RunConsoleCommand( "scpsb_load_keycards" ) -- load keycards
 
     timer.Simple( 1, function()
         for _, v in pairs( ents.FindByClass( "scp_sb_entity_spawner" ) ) do -- spawn class entity at cleanup

@@ -26,7 +26,7 @@ SCPSiteBreach.chooseTeam = function()
         end
 
     end
-    return 2
+    return 2 -- return CLASSD team in case
 end
 
 --  > Server Hooks <  --

@@ -39,6 +39,6 @@ net.Receive( "SCPSiteBreach:RoundStartHUD", function()
 
 
 		draw.SimpleText( "Round Start", "ScoreboardDefaultTitle", w/2, h/2 - 35, Color( 255, 255, 255 ), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER )
-		draw.SimpleText( player.GetCount() .. "/" .. game.MaxPlayers(), "ScoreboardDefaultTitle", w/2, h/2+15, Color( 255, 255, 255 ), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER )
+		draw.SimpleText( player.GetCount() .. " / " .. game.MaxPlayers(), "ScoreboardDefaultTitle", w/2, h/2+15, Color( 255, 255, 255 ), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER )
 	end )
 end )

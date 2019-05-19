@@ -24,10 +24,10 @@ end )
 
 concommand.Add( "scpsb_config", function( ply )
     if not ply:IsValid() or not ply:IsSuperAdmin() then return end
-    if not ply:IsSpectator() then return CLIENT and print( "You must be Spectator to config !" ) end
 
     ply:Give( "scp_sb_teams_spawner" )
     ply:Give( "scp_sb_entities_spawner" )
+    ply:Give( "scp_sb_keycards_config" )
 end )
 
 concommand.Add( "scpsb_cleanup", function( ply )

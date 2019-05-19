@@ -40,14 +40,6 @@ function GM:PlayerCanPickupItem( ply )
     return not ply:IsSpectator()
 end
 
----------------------
---  > PlayerUse <  --
----------------------
-function GM:PlayerUse( ply, ent )
-    if ply:IsSpectator() then return false end
-    return true
-end
-
 ------------------------
 --  > PlayerNoClip <  --
 ------------------------
@@ -55,6 +47,9 @@ function GM:PlayerNoClip( ply )
     return ply:IsSpectator()
 end
 
+---------------------------
+--  > PostPlayerDeath <  --
+---------------------------
 hook.Add( "PostPlayerDeath", "SCPSiteBreach:SpectateMode", function( ply )
     ply:SetSpectatePlayer() -- sv_players.lua
 end )

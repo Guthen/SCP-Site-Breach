@@ -68,7 +68,5 @@ function Player:ChangeTeam( _team )
         self:Give( v )
     end
 
-    print( self:Team() )
-
     return true
 end
