@@ -3,7 +3,6 @@ SWEP.Author			        = "Guthen" -- These two options will be shown when you hav
 SWEP.Instructions		    = "You have clearance level one !"
 
 SWEP.Spawnable              = true
-SWEP.AdminOnly              = true
 
 SWEP.Primary.ClipSize		= -1
 SWEP.Primary.DefaultClip	= -1
@@ -25,7 +24,7 @@ SWEP.DrawAmmo			    = false
 SWEP.DrawCrosshair		    = false
 
 SWEP.ViewModel			    = "models/weapons/v_grenade.mdl"
-SWEP.WorldModel			    = ""
+SWEP.WorldModel			    = "models/props/scp/keycard/keycard.mdl"
 
 SWEP.HoldType = "slam"
 
@@ -47,8 +46,12 @@ SWEP.ViewModelBoneMods = {
 
 function SWEP:PrimaryAttack() end
 
-function SWEP:SecondaryAttack() end
+function SWEP:SecondaryAttack()
+	if CLIENT then return end
+	self:SetNextSecondaryFire( CurTime() + .5 )
 
+	self:GetOwner():DropWeapon( self.Weapon )
+end
 --[[
 	SWEP Construction Kit base code
 		Created by Clavus

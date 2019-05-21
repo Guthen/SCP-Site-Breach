@@ -74,6 +74,8 @@ TEAM_CLASSD = SCPSiteBreach.AddTeam( "Class-D",
         armor = 0,
         walkSpd = 150,
         runSpd = 250,
+        max = 0,
+        alliance = "Chaos",
     } )
 
 -------------------
@@ -100,6 +102,8 @@ TEAM_SCIENTIST = SCPSiteBreach.AddTeam( "Scientist",
         armor = 0,
         walkSpd = 150,
         runSpd = 250,
+        max = 1,
+        alliance = "Foundation",
     } )
 
 -------------------
@@ -122,12 +126,15 @@ TEAM_GUARD = SCPSiteBreach.AddTeam( "Guard",
         armor = 50,
         walkSpd = 150,
         runSpd = 250,
+        max = 0,
+        alliance = "Foundation",
     } )
 
 --  > Load Teams <  --
 SCPSiteBreach.teamsSpawns = SCPSiteBreach.teamsSpawns or {}
 for k, v in pairs( SCPSiteBreach.teams ) do
     SCPSiteBreach.teamsSpawns[ k ] = {}
+    if v.max and v.max <= 0 then v.max = math.huge end
     team.SetUp( k, v.name or "Unnamed", v.color or Color( 50, 50, 50 ) )
 end
 

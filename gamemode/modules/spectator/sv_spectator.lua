@@ -25,14 +25,6 @@ net.Receive( "SCPSiteBreach:ChangeSpectatorTarget", function( _, ply )
 end )
 --  > Gamemode Hooks <  --
 
----------------------------------
---  > PlayerCanPickupWeapon <  --
----------------------------------
-function GM:PlayerCanPickupWeapon( ply, wep )
-    if wep.AdminOnly and ply:IsAdmin() then return true end
-    return not ply:IsSpectator()
-end
-
 -------------------------------
 --  > PlayerCanPickupItem <  --
 -------------------------------

@@ -22,6 +22,7 @@ function ENT:SpawnClassEntity()
 
 	if chance == 1 or _chance == math.ceil( 1/chance ) then
 	    local ent = ents.Create( self:GetClassEntity() )
+			  if not ent:IsValid() then return print( "SCPSiteBreach - Bad element : " .. self:GetClassEntity() ) end
 	          ent:SetPos( self:GetPos() + Vector( 0, 0, 10 ) )
 	          ent:SetAngles( self:GetAngles() )
 	          ent:Spawn()

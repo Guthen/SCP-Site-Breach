@@ -21,7 +21,10 @@ SCPSiteBreach.chooseTeam = function()
         for _k, _v in pairs( SCPSiteBreach.teams ) do
 
             local _count = #team.GetPlayers( _k )
-            if count < _count then return k end
+            if count < _count then
+                if _v.max and _count > _v.max then break end
+                return k
+            end
 
         end
 

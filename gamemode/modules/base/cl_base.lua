@@ -24,8 +24,8 @@ end
 --------------------
 --  > HUDPaint <  --
 --------------------
-function GM:HUDPaint()
-end
+--function GM:HUDPaint()
+--end
 
 -----------------------------
 --  > PostDrawViewModel <  --

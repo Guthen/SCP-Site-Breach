@@ -12,6 +12,9 @@ local Player = FindMetaTable( "Player" )
 
 --  > Player Functions <  --
 
+----------------------------------------
+--  > Player:SetSpectator( state ) <  --
+----------------------------------------
 function Player:SetSpectator( bool )
     self:SetNWBool( "SCPSiteBreach:IsSpectator", bool )
     if bool then
@@ -21,6 +24,9 @@ function Player:SetSpectator( bool )
     end
 end
 
+----------------------------------------------
+--  > Player:SetSpectatePlayer( target ) <  --
+----------------------------------------------
 function Player:SetSpectatePlayer( ply )
     local id = math.random( #player.GetAll() )
     local trg = ply or Entity( id )
@@ -36,6 +42,9 @@ function Player:SetSpectatePlayer( ply )
     self:SetNWInt( "SCPSiteBreach:SpectatorTarget", id )
 end
 
+-----------------------------------
+--  > Player:ChangeTeam( id ) <  --
+-----------------------------------
 function Player:ChangeTeam( _team )
     local teamTab = SCPSiteBreach.GetTeam( _team )
     if not teamTab then return false end
@@ -69,4 +78,18 @@ function Player:ChangeTeam( _team )
     end
 
     return true
+end
+
+function Player:Give( class, noAmmo )
+    local wep = ents.Create( class )
+    if not wep:IsValid() then return end
+          wep:SetPos( self:GetPos() )
+          wep.IsGive = true
+          wep:Spawn()
+
+    if not noAmmo then
+        self:GiveAmmo( wep:GetMaxClip1() * 3, wep:GetPrimaryAmmoType() )
+    end
+
+    return wep
 end

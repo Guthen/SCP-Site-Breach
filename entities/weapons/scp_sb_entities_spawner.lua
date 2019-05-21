@@ -42,6 +42,11 @@ local entities =
         "item_ammo_pistol",
         "scp_sb_firstaidkit",
         "scp_sb_vest",
+        "scp_sb_keycard_lvl_1",
+        "scp_sb_keycard_lvl_2",
+        "scp_sb_keycard_lvl_3",
+        "scp_sb_keycard_lvl_4",
+        "scp_sb_keycard_lvl_5",
     }
 local curChance = 1 -- btw 0 - 1
 
@@ -112,8 +117,8 @@ end
               frame:MakePopup()
 
         local scroll = vgui.Create( "DScrollPanel", frame )
-              scroll:Dock( FILL )
-              scroll:DockPadding( 0, 0, 0, 100 )
+              scroll:SetPos( 3, 25 )
+              scroll:SetSize( w-6, h-100 )
 
         local chance = vgui.Create( "DNumberWang", frame )
               chance:SetPos( 80, h-60 )

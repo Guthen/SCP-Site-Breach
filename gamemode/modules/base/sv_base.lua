@@ -101,6 +101,8 @@ function GM:PlayerFootstep( ply, _, foot, sound )
 
     if vel < 100 then return true end -- don't play sound if crouch walk
 
+    if ply:KeyDown( IN_WALK ) then return true end
+
     local snd = "guthen_scp/player/" .. run .. mat .. id .. ".ogg"
     ply:EmitSound( snd ) -- play footstep sound
     return true
@@ -113,4 +115,30 @@ function GM:PlayerCanHearPlayersVoice( list, talk )
     if list:IsSpectator() and talk:IsSpectator() then return true end -- spectators
     if list:GetPos():DistToSqr( talk:GetPos() ) < 500*500 then return true, true end -- distance
     return false
+end
+
+---------------------------------
+--  > PlayerCanPickupWeapon <  --
+---------------------------------
+function GM:PlayerCanPickupWeapon( ply, wep )
+    if ply:HasWeapon( wep:GetClass() ) then return false end -- don't get the same weapon
+
+    if wep.AdminOnly then -- no admin swep for users
+        if ply:IsSuperAdmin() then return true else return false end
+    end
+
+    if not wep.IsGive then -- take manually non-gived weapons (see: sv_players.lua)
+        if ply:KeyDown( IN_USE ) then
+            if not ply:GetEyeTrace().Entity == wep then return false end
+            return true
+        else
+            return false
+        end
+    end
+
+    return true
+end
+
+function GM:PlayerDroppedWeapon( ply, wep )
+    wep.IsGive = false
 end
