@@ -91,7 +91,10 @@ TEAM_SCIENTIST = SCPSiteBreach.AddTeam( "Scientist",
                 "models/player/humans/class_scientist/class_scientist_6.mdl",
                 "models/player/humans/class_scientist/class_scientist_7.mdl",
             },
-        weapons = {},
+        weapons =
+            {
+                "scp_sb_keycard_lvl_2",
+            },
         color = Color( 244, 211, 65 ),
         health = 100,
         armor = 0,
@@ -110,6 +113,7 @@ TEAM_GUARD = SCPSiteBreach.AddTeam( "Guard",
             },
         weapons =
             {
+                "scp_sb_keycard_lvl_3",
                 "weapon_smg1",
                 "weapon_stunstick",
             },

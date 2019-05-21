@@ -42,10 +42,10 @@ function SWEP:PrimaryAttack() -- create entities spawner
     local ent = ply:GetEyeTrace().Entity
     if not ent:IsValid() or not SCPSiteBreach.keycardAvailableClass[ ent:GetClass() ] then return end
 
-    ent.SCPSiteBreachLVL = curAccess -- set
+    ent:SetNWInt( "SCPSiteBreach:LVL", curAccess ) -- set
 
     if SERVER then -- SERVER only because CLIENT spam chat
-        ply:ChatPrint( "SCPSiteBreach - The target has been set on LVL " .. ent.SCPSiteBreachLVL )
+        ply:ChatPrint( "SCPSiteBreach - The target has been set on LVL " .. ent:GetNWInt( "SCPSiteBreach:LVL", 0 ) )
     end
 end
 
@@ -58,7 +58,7 @@ function SWEP:SecondaryAttack() -- remove entities spawner in sphere
     local ent = ply:GetEyeTrace().Entity
     if not ent:IsValid() or not SCPSiteBreach.keycardAvailableClass[ ent:GetClass() ] then return end
 
-    ent.SCPSiteBreachLVL = nil -- erased
+    ent:SetNWInt( "SCPSiteBreach:LVL", nil ) -- erased
 
     if SERVER then -- SERVER only because CLIENT spam chat
         ply:ChatPrint( "SCPSiteBreach - The target's LVL has been erased !" )
@@ -72,14 +72,14 @@ function SWEP:Reload()
     curAccess = curAccess >= 5 and 1 or curAccess + 1
 
     canReload = false
-    timer.Simple( .5, function() canReload = true end )
+    timer.Simple( .1, function() canReload = true end )
 end
 
 function SWEP:DrawHUD()
     draw.SimpleText( "Current LVL: " .. curAccess, "DermaDefault", ScrW()/2+50, ScrH()/2, Color( 255, 255, 255 ), TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER )
     local trg = self:GetOwner():GetEyeTrace().Entity
     draw.SimpleText( "Target Class: " .. trg:GetClass() or "nil", "DermaDefault", ScrW()/2+50, ScrH()/2+15, Color( 255, 255, 255 ), TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER )
-    if trg:IsValid() and trg.SCPSiteBreachLVL then
-        draw.SimpleText( "Target LVL: " .. trg.SCPSiteBreachLVL, "DermaDefault", ScrW()/2+50, ScrH()/2+30, Color( 255, 255, 255 ), TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER )
+    if trg:IsValid() and trg:GetNWInt( "SCPSiteBreach:LVL", 0 ) then
+        draw.SimpleText( "Target LVL: " .. trg:GetNWInt( "SCPSiteBreach:LVL", 0 ), "DermaDefault", ScrW()/2+50, ScrH()/2+30, Color( 255, 255, 255 ), TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER )
     end
 end

@@ -3,8 +3,8 @@
 --     > sh_debug.lua <    --
 -----------------------------
 
-concommand.Add( "scpsb_getmodels", function()
-    local fol = "models/props/scp/firstaidkit/"
+concommand.Add( "scpsb_getmodels", function( _, _, _, arg )
+    local fol = "models/" .. ( arg or "" )
     local mdls, folders = file.Find( fol .. "*", "GAME" )
 
     for _, v in pairs( folders ) do
@@ -13,6 +13,23 @@ concommand.Add( "scpsb_getmodels", function()
     for _, v in pairs( mdls ) do
         print( "    Model : ".. fol .. v )
     end
+end )
+
+concommand.Add( "scpsb_getweapons", function( _, _, _, arg )
+    if not arg or string.len( arg ) <= 1 then return print( "SCPSiteBreach - You must return an argument" ) end
+    local i = 0
+    for _, v in pairs( weapons.GetList() ) do
+        if not v.ClassName then continue end
+        if string.find( v.ClassName:lower(), ( arg or "" ):lower() ) then print( v.ClassName ) i = i + 1 end
+    end
+    if i <= 0 then return print( "SCPSiteBreach - Found no weapons" ) end
+end )
+
+concommand.Add( "scpsb_giveweapon", function( ply, _, args )
+    if not ply:IsSuperAdmin() then return end
+    if not args[1] then return end
+
+    ply:Give( args[1] )
 end )
 
 concommand.Add( "scpsb_round_start", function( ply )

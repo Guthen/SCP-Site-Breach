@@ -28,8 +28,8 @@ concommand.Add( "scpsb_save_keycards", function( ply )
     local i = 0 -- get number of saved entities
     for k, _ in pairs( SCPSiteBreach.keycardAvailableClass ) do
         for _, v in pairs( ents.FindByClass( k ) ) do -- add data to a table
-            if not v.SCPSiteBreachLVL then continue end
-            table.insert( _ents, { mapID = v:MapCreationID(), lvl = v.SCPSiteBreachLVL or 0 } )
+            if v:GetNWInt( "SCPSiteBreach:LVL", 0 ) <= 0 then continue end
+            table.insert( _ents, { mapID = v:MapCreationID(), lvl = v:GetNWInt( "SCPSiteBreach:LVL", 0 ) } )
             i = i + 1
         end
     end
@@ -61,7 +61,7 @@ concommand.Add( "scpsb_load_keycards", function( ply )
     local i = 0
     for _, v in pairs( _ents ) do -- spawn the entities
         local _ent = ents.GetMapCreatedEntity( v.mapID )
-              _ent.SCPSiteBreachLVL = v.lvl > 0 and v.lvl or nil -- get nil if 0
+              _ent:SetNWInt( "SCPSiteBreach:LVL", v.lvl > 0 and v.lvl or nil ) -- get nil if 0 or lvl
 
         i = i + 1
     end

@@ -32,6 +32,7 @@ end )
 --  > Gamemode Hooks <  --
 
 function GM:PlayerDeathThink( ply )
+    if ply:IsBot() then return false end
     if not SCPSiteBreach.roundActive then return false end
 end
 
@@ -53,6 +54,7 @@ function GM:RoundStart()
 end
 
 function GM:PlayerInitialSpawn( ply )
-    if roundActive then return ply:SetSpectator( true ) end -- set spectator if round is active
+    print( SCPSiteBreach.roundActive )
+    if SCPSiteBreach.roundActive then return ply:SetSpectator( true ) end -- set spectator if round is active
     RunConsoleCommand( "scpsb_round_start" ) -- start the round if not active
 end
