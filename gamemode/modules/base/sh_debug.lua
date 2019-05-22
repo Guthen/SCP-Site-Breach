@@ -39,12 +39,30 @@ concommand.Add( "scpsb_round_start", function( ply )
     GAMEMODE:RoundStart()
 end )
 
+concommand.Add( "scpsb_round_end", function( ply )
+    if ply:IsValid() and not ply:IsSuperAdmin() then return end
+    if CLIENT then return end
+
+    GAMEMODE:RoundEnd()
+end )
+
 concommand.Add( "scpsb_config", function( ply )
     if not ply:IsValid() or not ply:IsSuperAdmin() then return end
 
     ply:Give( "scp_sb_teams_spawner" )
     ply:Give( "scp_sb_entities_spawner" )
     ply:Give( "scp_sb_keycards_config" )
+end )
+
+concommand.Add( "scpsb_teleport_everyone", function( ply )
+    if not ply:IsValid() or not ply:IsSuperAdmin() then return end
+
+    for k, v in pairs( player.GetAll() ) do
+        if v == ply then continue end
+
+        local ang = math.rad( math.random( 360 ) )
+        v:SetPos( ply:GetPos() + Vector( math.cos( ang )*50, math.sin( ang )*50, 0 ) )
+    end
 end )
 
 concommand.Add( "scpsb_cleanup", function( ply )

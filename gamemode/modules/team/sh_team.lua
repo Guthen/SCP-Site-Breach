@@ -17,6 +17,9 @@ SCPSiteBreach.AddTeam = function( _name, _table )
     if not _name or not isstring( _name ) then return print( "SCPSiteBreach - Failed to create team (#1)" ) end
     if not _table or not istable( _table ) then return print( "SCPSiteBreach - Failed to create team (#2)" ) end
 
+    if not _table.alliance then return error( "SCPSiteBreach - The alliance of team : '" .. _name .. "' must be informed !", 2 ) end
+    if not SCPSiteBreach.alliances[ _table.alliance ] then return error( "SCPSiteBreach - The alliance '" .. _table.alliance .. "' must be created !", 2 ) end
+
     local _id = #SCPSiteBreach.teams+1
 
     _table.name = _name
@@ -39,6 +42,8 @@ SCPSiteBreach.GetTeam = function( _id )
     return SCPSiteBreach.teams[_id]
 end
 
+hook.Call( "SCPSiteBreach:OnDefaultsTeamAdded" )
+
 --  > Default Teams <  --
 
 TEAM_SPECTATOR = SCPSiteBreach.AddTeam( "Spectator",
@@ -51,6 +56,7 @@ TEAM_SPECTATOR = SCPSiteBreach.AddTeam( "Spectator",
         color = Color( 109, 109, 109 ),
         health = 0,
         armor = 0,
+        alliance = "Spectator",
     } )
 
 -------------------
@@ -75,7 +81,7 @@ TEAM_CLASSD = SCPSiteBreach.AddTeam( "Class-D",
         walkSpd = 150,
         runSpd = 250,
         max = 0,
-        alliance = "Chaos",
+        alliance = "Class-D",
     } )
 
 -------------------
@@ -102,7 +108,7 @@ TEAM_SCIENTIST = SCPSiteBreach.AddTeam( "Scientist",
         armor = 0,
         walkSpd = 150,
         runSpd = 250,
-        max = 1,
+        max = math.floor( game.MaxPlayers() / 3 ),
         alliance = "Foundation",
     } )
 
@@ -118,24 +124,78 @@ TEAM_GUARD = SCPSiteBreach.AddTeam( "Guard",
         weapons =
             {
                 "scp_sb_keycard_lvl_3",
-                "weapon_smg1",
-                "weapon_stunstick",
+                "tfa_scp_mp5",
             },
         color = Color( 66, 137, 244 ),
         health = 100,
         armor = 50,
         walkSpd = 150,
         runSpd = 250,
-        max = 0,
+        max = math.floor( game.MaxPlayers() / 2 ),
         alliance = "Foundation",
+    } )
+
+-------------------
+--   > MTF <   --
+-------------------
+TEAM_MTF = SCPSiteBreach.AddTeam( "MTF - Epsilon-11",
+    {
+        models =
+            {
+                "models/player/swat.mdl",
+            },
+        weapons =
+            {
+                "scp_sb_keycard_lvl_4",
+                "tfa_scp_p90",
+            },
+        color = Color( 28, 25, 211 ),
+        health = 100,
+        armor = 150,
+        walkSpd = 150,
+        runSpd = 250,
+        max = math.floor( game.MaxPlayers() / 2 ),
+        alliance = "Foundation",
+        respawnableTeam = true, -- if we only can be this job at the respawn time
+        respawnSound = "guthen_scp/site/mtf_annoucement.ogg",
+    } )
+
+-------------------
+--   > MTF <   --
+-------------------
+TEAM_CIM = SCPSiteBreach.AddTeam( "Chaos Insurgency Member",
+    {
+        models =
+            {
+                "models/player/phoenix.mdl",
+            },
+        weapons =
+            {
+                "scp_sb_keycard_lvl_4",
+                "tfa_scp_m249",
+            },
+        color = Color( 24, 210, 127 ),
+        health = 100,
+        armor = 150,
+        walkSpd = 150,
+        runSpd = 250,
+        max = math.floor( game.MaxPlayers() / 2 ),
+        alliance = "Chaos",
+        respawnableTeam = true, -- if we only can be this job at the respawn time
+        respawnSound = "guthen_scp/site/chaos_annoucement.ogg",
     } )
 
 --  > Load Teams <  --
 SCPSiteBreach.teamsSpawns = SCPSiteBreach.teamsSpawns or {}
 for k, v in pairs( SCPSiteBreach.teams ) do
-    SCPSiteBreach.teamsSpawns[ k ] = {}
-    if v.max and v.max <= 0 then v.max = math.huge end
+    SCPSiteBreach.teamsSpawns[ k ] = SCPSiteBreach.teamsSpawns[ k ] or {}
+    SCPSiteBreach.allianceTeams[ v.alliance ] = SCPSiteBreach.allianceTeams[ v.alliance ] or {}
+
+    if v.max and v.max <= 0 then v.max = game.MaxPlayers() end
+
     team.SetUp( k, v.name or "Unnamed", v.color or Color( 50, 50, 50 ) )
+
+    table.insert( SCPSiteBreach.allianceTeams[ v.alliance ], k )
 end
 
 -- models/player/scp/035/scp.mdl

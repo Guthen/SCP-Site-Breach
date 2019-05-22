@@ -13,23 +13,45 @@ SCPSiteBreach.teams = SCPSiteBreach.teams or {}
 util.AddNetworkString( "SCPSiteBreach:TeamHUD" )
 
 --  > Custom Functions <  --
+SCPSiteBreach.respawnableAlliance = "Chaos"
 
 SCPSiteBreach.chooseTeam = function()
+    local lessPlTeam = TEAM_CLASSD
     for k, v in pairs( SCPSiteBreach.teams ) do
+        if TEAM_SPECTATOR == k then continue end
 
-        local count = #team.GetPlayers( k )
-        for _k, _v in pairs( SCPSiteBreach.teams ) do
-
-            local _count = #team.GetPlayers( _k )
-            if count < _count then
-                if _v.max and _count > _v.max then break end
+        if SCPSiteBreach.roundActive then -- get mtf/other team if the round is active (respawn time)
+            if not v.respawnableTeam then continue end
+            if SCPSiteBreach.respawnableAlliance == v.alliance then
                 return k
             end
-
         end
+        if v.respawnableTeam then continue end -- can't be mtf/other team if round is not active
 
+        local count = #team.GetPlayers( k )
+        if count == 0 then return k end
+
+        for _k, _v in pairs( SCPSiteBreach.teams ) do
+            if TEAM_SPECTATOR == k then continue end
+            if k == _k then continue end
+
+            if SCPSiteBreach.roundActive then -- get mtf/other team if the round is active (respawn time)
+                if not _v.respawnableTeam then continue end
+                if SCPSiteBreach.respawnableAlliance == _v.alliance then
+                    return _k
+                end
+            end
+            if _v.respawnableTeam then continue end -- can't be mtf/other team if round is not active
+
+            local _count = #team.GetPlayers( _k )
+            if count > _count then
+                if _v.max and _count + 1 > _v.max then continue end
+                lessPlTeam = _k
+            end
+        end
     end
-    return 2 -- return CLASSD team in case
+
+    return lessPlTeam -- return CLASSD team if not found
 end
 
 --  > Server Hooks <  --

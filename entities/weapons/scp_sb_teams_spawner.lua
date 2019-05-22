@@ -53,6 +53,8 @@ function SWEP:SecondaryAttack() -- remove entities spawner in sphere
     local ply = self:GetOwner()
     if not ply:IsValid() or not ply:Alive() then return end
 
+    if CLIENT then return end
+
     self.Weapon:SetNextSecondaryFire( CurTime() + .25 )
 
     local _ents = ents.FindInSphere( ply:GetEyeTrace().HitPos, 10 )

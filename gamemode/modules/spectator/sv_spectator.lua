@@ -32,13 +32,6 @@ function GM:PlayerCanPickupItem( ply )
     return not ply:IsSpectator()
 end
 
-------------------------
---  > PlayerNoClip <  --
-------------------------
-function GM:PlayerNoClip( ply )
-    return ply:IsSpectator()
-end
-
 ---------------------------
 --  > PostPlayerDeath <  --
 ---------------------------

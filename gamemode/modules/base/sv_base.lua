@@ -3,6 +3,9 @@
 --     > sv_base.lua <     --
 -----------------------------
 
+--  > Network <  --
+util.AddNetworkString( "SCPSiteBreach:PlaySound" )
+
 --  > Gamemode Hooks <  --
 
 function GM:PreCleanupMap()
@@ -36,6 +39,8 @@ function GM:PlayerSpawn( ply )
     ply:SetupHands()
 
     --  > Team <  --
+    if not ply:Team() == TEAM_SPECTATOR then return ply:ChangeTeam( ply:Team() ) end
+
     local _team = SCPSiteBreach.chooseTeam()
     if _team == TEAM_UNASSIGNED then _team = 1 end
     if not ply:IsSpectator() then -- don't be a spectator if you haven't played
@@ -56,14 +61,15 @@ end
 function GM:PlayerDeath( ply, inf, atk )
     --  > Ragdoll <  --
     local ragdoll = ply:GetRagdollEntity()
+    local _ragdoll
     if ragdoll and ragdoll:IsValid() then
         ragdoll:Remove()
 
         if ply:IsSpectator() then return end
-        local _ragdoll = ents.Create( "prop_ragdoll" )
-              _ragdoll:SetModel( ply:GetModel() )
-              _ragdoll:SetPos( ply:GetPos() )
-              _ragdoll:Spawn()
+        _ragdoll = ents.Create( "prop_ragdoll" )
+        _ragdoll:SetModel( ply:GetModel() )
+        _ragdoll:SetPos( ply:GetPos() )
+        _ragdoll:Spawn()
     end
     --  > Weapons <  --
     local weaps = ply:GetWeapons()
@@ -141,4 +147,12 @@ end
 
 function GM:PlayerDroppedWeapon( ply, wep )
     wep.IsGive = false
+end
+
+function GM:PlayerNoClip( ply, state )
+    local wep = ply:GetActiveWeapon() and ply:GetActiveWeapon():IsValid() and ply:GetActiveWeapon():GetClass()
+    if wep then
+        if wep == "scp_sb_keycards_config" or wep == "scp_sb_teams_spawner" or wep == "scp_sb_entities_spawner" then return true end
+    end
+    return not state
 end

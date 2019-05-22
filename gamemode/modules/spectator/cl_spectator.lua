@@ -38,6 +38,6 @@ hook.Add( "HUDPaint", "SCPSiteBreach:SpectatorHUD", function()
     local id = LocalPlayer():GetNWInt( "SCPSiteBreach:SpectatorTarget", 1 )
     local ent = Entity( id )
 
-    draw.SimpleTextOutlined( "You are spectating :", "ScoreboardDefaultTitle", ScrW()/2, ScrH()/1.1, Color( 255, 255, 255, 255 ), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, 2, Color( 0, 0, 0 ) )
-    draw.SimpleTextOutlined( ent:Name(), "ScoreboardDefaultTitle", ScrW()/2, ScrH()/1.05, team.GetColor( ent:Team() ), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, 2, Color( 0, 0, 0 ) )
+    draw.SimpleTextOutlined( "You are spectating :", "SCPSiteBreach:Font35", ScrW()/2, ScrH()/1.1, Color( 255, 255, 255, 255 ), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, 2, Color( 0, 0, 0 ) )
+    draw.SimpleTextOutlined( ent:Name(), "SCPSiteBreach:Font30", ScrW()/2, ScrH()/1.05, team.GetColor( ent:Team() ), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, 2, Color( 0, 0, 0 ) )
 end )

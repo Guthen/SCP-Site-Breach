@@ -40,6 +40,8 @@ function Player:SetSpectatePlayer( ply )
     self:SpectateEntity( trg )
 
     self:SetNWInt( "SCPSiteBreach:SpectatorTarget", id )
+
+    self:SetTeam( TEAM_SPECTATOR )
 end
 
 -----------------------------------
