@@ -24,7 +24,7 @@ net.Receive( "SCPSiteBreach:RoundStartReady", function( _, ply )
     if nReady >= math.ceil( game.MaxPlayers()/2 - #player.GetBots() ) then
         timer.Simple( 1, function()
             local _players = player.GetAll()
-            table.sort( _players, function() return math.random( 1, 2 ) == 2 end )
+            table.Shuffle( _players )
 
             for _, v in pairs( _players ) do
                 v:UnLock()
