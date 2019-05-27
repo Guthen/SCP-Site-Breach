@@ -196,7 +196,7 @@ concommand.Add( "scpsb_load_teams_spawner", function( ply )
         v:Remove()
     end
 
-    for _, v in pairs( SCPSiteBreach.teamsSpawns ) do -- reset all points
+    for _, v in pairs( SCPSiteBreach.teamsSpawns or {} ) do -- reset all points
         table.Empty( v )
     end
 

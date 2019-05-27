@@ -26,6 +26,9 @@ function GM:PostCleanupMap()
     end )
 end
 
+function GM:PlayerInitialSpawn( ply )
+end
+
 -----------------------
 --  > PlayerSpawn <  --
 -----------------------
@@ -53,6 +56,35 @@ function GM:PlayerSpawn( ply )
     end
 
     ply:ChangeTeam( _team ) -- sv_players.lua
+
+    --  > Var <  --
+    ply:SetNWInt( "SCPSiteBreach:Stamina", 20 )
+    ply:SetNWInt( "SCPSiteBreach:Blink", 20 )
+
+    --  > Blink <  --
+    if timer.Exists( "SCPSiteBreach:Blink" .. ply:UserID() ) then timer.Remove( "SCPSiteBreach:Blink" .. ply:UserID() ) end
+    if not ply:IsSCP() then -- if not scp then don't blink
+        timer.Create( "SCPSiteBreach:Blink" .. ply:UserID() , .25, 0, function()
+            if ply:IsSpectator() then return end
+
+            local blink = ply:GetNWInt( "SCPSiteBreach:Blink", 20 ) -- get
+            if blink >= 0 then
+                ply:SetNWInt( "SCPSiteBreach:Blink", blink - 1 ) -- lose
+                blink = blink - 1 -- refresh
+            end
+            if blink == -1 then
+                ply:ScreenFade( SCREENFADE.OUT, Color( 0, 0, 0 ), .1, .2 )
+                ply:SetNWBool( "SCPSiteBreach:IsBlink", true )
+                timer.Simple( .3, function()
+                    if ply:IsValid() then
+                        ply:SetNWInt( "SCPSiteBreach:Blink", 20 )
+                        ply:SetNWBool( "SCPSiteBreach:IsBlink", false )
+                        ply:ScreenFade( SCREENFADE.IN, Color( 0, 0, 0 ), .1, .1 )
+                    end
+                end )
+            end
+        end )
+    end
 end
 
 -----------------------
@@ -83,6 +115,9 @@ function GM:PlayerDeath( ply, inf, atk )
 
     --  > Var <  --
     ply:SetSpectator( true )
+
+    ply:SetNWInt( "SCPSiteBreach:Stamina", 20 )
+    ply:SetNWInt( "SCPSiteBreach:Blink", 20 )
 end
 
 ----------------------------
@@ -108,6 +143,36 @@ function GM:PlayerFootstep( ply, _, foot, sound )
     if vel < 100 then return true end -- don't play sound if crouch walk
 
     if ply:KeyDown( IN_WALK ) then return true end
+
+    if ply:KeyDown( IN_SPEED ) then -- stamina lose
+        if timer.Exists( "SCPSiteBreach:Stamina" .. ply:UserID() ) then -- destroy stamina gain
+            timer.Remove( "SCPSiteBreach:Stamina" .. ply:UserID() )
+        end
+
+        local stamina = ply:GetNWInt( "SCPSiteBreach:Stamina", 20 )
+        if stamina >= 0 then
+            ply:SetNWInt( "SCPSiteBreach:Stamina", stamina - 1 ) -- you sprint, you lose
+        end
+        if stamina - 1 <= 0 then
+            ply:SetRunSpeed( ply:GetWalkSpeed() )
+        else
+            ply:SetRunSpeed( SCPSiteBreach.teams[ ply:Team() ].runSpd )
+        end
+        if stamina <= 9 and stamina % 3 == 0 then
+            ply:EmitSound( "guthen_scp/player/breath" .. math.random( 1, 4 ) .. ".ogg" ) -- some sound
+        end
+    else -- stamina gain
+        local stamina = ply:GetNWInt( "SCPSiteBreach:Stamina", 20 )
+        timer.Simple( 1, function() -- wait a time
+            if stamina == ply:GetNWInt( "SCPSiteBreach:Stamina", 20 ) then -- if stamina is same as before
+                timer.Create( "SCPSiteBreach:Stamina" .. ply:UserID(), .25, 0, function() -- gain
+                    local stamina = ply:GetNWInt( "SCPSiteBreach:Stamina", 20 )
+                    ply:SetNWInt( "SCPSiteBreach:Stamina", math.Clamp( stamina + 1, 0, 20 ) )
+                    if stamina + 1 >= 20 or ply:IsSpectator() then timer.Remove( "SCPSiteBreach:Stamina" .. ply:UserID() ) end -- if max then destroy
+                end )
+            end
+        end )
+    end
 
     local snd = "guthen_scp/player/" .. run .. mat .. id .. ".ogg"
     ply:EmitSound( snd ) -- play footstep sound

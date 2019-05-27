@@ -14,27 +14,36 @@ SCPSiteBreach.AddAlliance = function( _name, _table )
 end
 
 --  > Default Alliances <  --
-hook.Add( "SCPSiteBreach:OnDefaultsTeamAdded", "SCPSiteBreach:LoadAlliances", function()
-    SCPSiteBreach.alliances = SCPSiteBreach.alliances or {}
+SCPSiteBreach.AddAlliance( "Spectator", -- spectator alliance should never be deleted
+    {
+        respawnableAlliance = false, -- if in this alliance, some teams are respawnable
+        isSpectator = true,
+    } )
 
-    SCPSiteBreach.AddAlliance( "Spectator",
-        {
-            respawnableAlliance = false, -- if in this alliance, some teams are respawnable
-            isSpectator = true,
-        } )
+local shouldLoadCat = hook.Call( "SCPSiteBreach:OnDefaultCategoriesAdded" )
+if shouldLoadCat or shouldLoadCat == nil then
+    hook.Add( "SCPSiteBreach:OnDefaultTeamsAdded", "SCPSiteBreach:LoadAlliances", function()
+        SCPSiteBreach.alliances = SCPSiteBreach.alliances or {}
 
-    SCPSiteBreach.AddAlliance( "Class-D",
-        {
-            respawnableAlliance = false, -- if in this alliance, some teams are respawnable
-        } )
+        SCPSiteBreach.AddAlliance( "Class-D",
+            {
+                respawnableAlliance = false, -- if in this alliance, some teams are respawnable
+            } )
 
-    SCPSiteBreach.AddAlliance( "Foundation",
-        {
-            respawnableAlliance = true, -- if in this alliance, some teams are respawnable
-        } )
+        SCPSiteBreach.AddAlliance( "Foundation",
+            {
+                respawnableAlliance = true, -- if in this alliance, some teams are respawnable
+            } )
 
-    SCPSiteBreach.AddAlliance( "Chaos",
-        {
-            respawnableAlliance = true, -- if in this alliance, some teams are respawnable
-        } )
-end )
+        SCPSiteBreach.AddAlliance( "Chaos",
+            {
+                respawnableAlliance = true, -- if in this alliance, some teams are respawnable
+            } )
+
+        SCPSiteBreach.AddAlliance( "SCPs",
+            {
+                isSCP = true,
+                respawnableAlliance = false, -- if in this alliance, some teams are respawnable
+            } )
+    end )
+end

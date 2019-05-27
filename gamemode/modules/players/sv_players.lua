@@ -82,6 +82,10 @@ function Player:ChangeTeam( _team )
     return true
 end
 
+----------------------------------------
+--  > Player:Give( class, noAmmo ) <  --
+--      >      OVERWRITE       <      --
+----------------------------------------
 function Player:Give( class, noAmmo )
     local wep = ents.Create( class )
     if not wep:IsValid() then return end

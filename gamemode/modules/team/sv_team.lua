@@ -16,7 +16,14 @@ util.AddNetworkString( "SCPSiteBreach:TeamHUD" )
 SCPSiteBreach.respawnableAlliance = "Chaos"
 
 SCPSiteBreach.chooseTeam = function()
+    local manySCPs = math.floor( ( player.GetCount() - #team.GetPlayers( TEAM_SPECTATOR ) - #SCPSiteBreach.getSCPPlayers() ) / 4 )
+    if manySCPs > 0 then
+        local scp = table.Random( SCPSiteBreach.getSCPTeams() )
+        return scp
+    end
+
     local lessPlTeam = TEAM_CLASSD
+
     for k, v in pairs( SCPSiteBreach.teams ) do
         if TEAM_SPECTATOR == k then continue end
 

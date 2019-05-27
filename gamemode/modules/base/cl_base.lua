@@ -19,6 +19,13 @@ SCPSiteBreach.drawCircle = function( x, y, ang, rad, seg )
 	return circle
 end
 
+SCPSiteBreach.drawMeter = function( mat, x, y, xOff, many )
+	surface.SetMaterial( mat )
+	for i = 0, many do
+		surface.DrawTexturedRect( x + i * mat:Width() * xOff, y, mat:Width(), mat:Height() )
+	end
+end
+
 --	> Fonts <  --
 for i = 20, 60 do
 	surface.CreateFont( "SCPSiteBreach:Font" .. i, {
@@ -44,6 +51,43 @@ end )
 --------------------
 --function GM:HUDPaint()
 --end
+
+local eyeMat = Material( "scp_content/BlinkIcon.png" )
+local runMat = Material( "scp_content/sprinticon.png" )
+local sneakMat = Material( "scp_content/sneakicon.png" )
+
+local blinkMat = Material( "scp_content/BlinkMeter.jpg" )
+local staminaMat = Material( "scp_content/StaminaMeter.jpg" )
+
+--	> Blink & Stamina HUD <  --
+hook.Add( "HUDPaint", "SCPSiteBreach:HUD", function()
+
+	--	> Icons <  --
+	surface.SetDrawColor( Color( 255, 255, 255 ) )
+	draw.NoTexture()
+
+	surface.DrawOutlinedRect( 30, ScrH() - 120, 34, 34 ) -- blink
+
+	surface.DrawOutlinedRect( 30, ScrH() - 60, 34, 34 ) -- run / crouch
+
+	surface.SetMaterial( eyeMat ) -- blink icon
+	surface.DrawTexturedRect( 32, ScrH() - 118, 30, 30 )
+
+	if input.IsControlDown() or LocalPlayer():KeyDown( IN_WALK ) then
+		surface.SetMaterial( sneakMat ) -- crouch icon
+	else
+		surface.SetMaterial( runMat ) -- run icon
+	end
+	surface.DrawTexturedRect( 32, ScrH() - 58, 30, 30 ) -- crouch / run
+
+	--	> Run/Blink Meter <  --
+	surface.DrawOutlinedRect( 70, ScrH() - 120, 196, 18 ) -- blink outline
+	SCPSiteBreach.drawMeter( blinkMat, 72, ScrH() - 118, 1.15, LocalPlayer():GetNWInt( "SCPSiteBreach:Blink", 20 ) )
+
+	surface.DrawOutlinedRect( 70, ScrH() - 60, 196, 18 ) -- run outline
+	SCPSiteBreach.drawMeter( staminaMat, 72, ScrH() - 58, 1.15, LocalPlayer():GetNWInt( "SCPSiteBreach:Stamina", 20 ) )
+
+end )
 
 function GM:HUDDrawTargetID()
 end

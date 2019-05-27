@@ -18,3 +18,16 @@ function Player:SetBottomMessage( msg )
         net.WriteString( msg )
     net.Send( self )
 end
+
+--------------------------
+--  > Player:IsSCP() <  --
+--------------------------
+function Player:IsSCP()
+    if self:Team() == TEAM_UNASSIGNED then return false end
+
+    local t = SCPSiteBreach.teams[ self:Team() ]
+    if not t then return false end
+
+    local a = SCPSiteBreach.alliances[ t.alliance ]
+    return a and a.isSCP
+end
