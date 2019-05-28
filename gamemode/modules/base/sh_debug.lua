@@ -70,14 +70,24 @@ concommand.Add( "scpsb_cleanup", function( ply )
 end )
 
 concommand.Add( "scpsb_unspectator", function( ply )
-    if not ply:IsSuperAdmin() then return end
+    if not ply:IsValid() or not ply:IsSuperAdmin() then return end
 
-    ply:SetNWBool( "SCPSiteBreach:IsSpectator", false )
+    ply:SetSpectator( false )
     ply:Spawn()
 end )
 
+concommand.Add( "scpsb_setteam", function( ply, _, args )
+    if not ply:IsValid() or not ply:IsSuperAdmin() then return end
+
+    ply:SetSpectator( false )
+    ply:Spawn()
+    ply:StripWeapons()
+    ply:ChangeTeam( tonumber( args[1] ) )
+end )
+
+
 concommand.Add( "scpsb_kill", function( ply )
-    if not ply:IsSuperAdmin() then return end
+    if not ply:IsValid() or not ply:IsSuperAdmin() then return end
 
     local ent = ply:GetEyeTrace().Entity
     if not ent:IsValid() or not ent:IsPlayer() then return end

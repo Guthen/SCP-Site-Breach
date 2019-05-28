@@ -24,6 +24,12 @@ function Player:SetSpectator( bool )
     end
 end
 
+function Player:SendTo106Dimension()
+    self:Freeze( true )
+
+    self:SetPos( self:GetPos() - Vector( 0, 0, 1 ) )
+end
+
 ----------------------------------------------
 --  > Player:SetSpectatePlayer( target ) <  --
 ----------------------------------------------

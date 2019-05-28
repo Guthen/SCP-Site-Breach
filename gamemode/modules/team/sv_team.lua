@@ -18,13 +18,21 @@ SCPSiteBreach.respawnableAlliance = "Chaos"
 SCPSiteBreach.chooseTeam = function()
     local manySCPs = math.floor( ( player.GetCount() - #team.GetPlayers( TEAM_SPECTATOR ) - #SCPSiteBreach.getSCPPlayers() ) / 4 )
     if manySCPs > 0 then
-        local scp = table.Random( SCPSiteBreach.getSCPTeams() )
-        return scp
+        local SCPs = SCPSiteBreach.getSCPTeams()
+        local nSCPs = #SCPs
+
+        for k, v in pairs( table.Shuffle( SCPs ) ) do
+            local count = #team.GetPlayers( v )
+
+            if count < SCPSiteBreach.GetTeam( v ).max then
+                return scp
+            end
+        end
     end
 
     local lessPlTeam = TEAM_CLASSD
 
-    for k, v in pairs( SCPSiteBreach.teams ) do
+    for k, v in pairs( SCPSiteBreach.GetTeams() ) do
         if TEAM_SPECTATOR == k then continue end
 
         if SCPSiteBreach.roundActive then -- get mtf/other team if the round is active (respawn time)
@@ -38,7 +46,7 @@ SCPSiteBreach.chooseTeam = function()
         local count = #team.GetPlayers( k )
         if count == 0 then return k end
 
-        for _k, _v in pairs( SCPSiteBreach.teams ) do
+        for _k, _v in pairs( SCPSiteBreach.GetTeams() ) do
             if TEAM_SPECTATOR == k then continue end
             if k == _k then continue end
 

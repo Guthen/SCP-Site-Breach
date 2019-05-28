@@ -6,6 +6,7 @@
 --	> RoundStartHUD <  --
 net.Receive( "SCPSiteBreach:RoundStartHUD", function()
 	hook.Remove( "HUDPaint", "SCPSiteBreach:RoundEndHUD" )
+	hook.Remove( "HUDPaint", "SCPSiteBreach:TeamHUD" )
 
 	local w, h = ScrW(), ScrH()
 	local ang = 360
@@ -52,6 +53,7 @@ end )
 --	> RoundEndHUD <  --
 net.Receive( "SCPSiteBreach:RoundEndHUD", function()
 	hook.Remove( "HUDPaint", "SCPSiteBreach:RoundStartHUD" )
+	hook.Remove( "HUDPaint", "SCPSiteBreach:TeamHUD" )
 
 	local w, h = ScrW(), ScrH()
 	local alpha = 0

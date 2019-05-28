@@ -8,8 +8,8 @@ util.AddNetworkString( "SCPSiteBreach:PlaySound" )
 
 --  > Gamemode Hooks <  --
 
-function GM:PreCleanupMap()
-end
+--function GM:PreCleanupMap()
+--end
 
 --------------------------
 --  > PostCleanupMap <  --
@@ -24,9 +24,6 @@ function GM:PostCleanupMap()
             v:SpawnClassEntity()
         end
     end )
-end
-
-function GM:PlayerInitialSpawn( ply )
 end
 
 -----------------------
@@ -131,6 +128,7 @@ end
 --  > PlayerFootstep <  --
 --------------------------
 function GM:PlayerFootstep( ply, _, foot, sound )
+    if ply:IsSCP() then return false end
     local id = (foot+1) * math.random( 1, 4 ) -- sound id
 
     local mat = ""
@@ -210,14 +208,28 @@ function GM:PlayerCanPickupWeapon( ply, wep )
     return true
 end
 
+-------------------------------
+--  > PlayerDroppedWeapon <  --
+-- > TAKE WEAPONS MANUALLY < --
+-------------------------------
 function GM:PlayerDroppedWeapon( ply, wep )
     wep.IsGive = false
 end
 
+------------------------
+--  > PlayerNoClip <  --
+------------------------
 function GM:PlayerNoClip( ply, state )
     local wep = ply:GetActiveWeapon() and ply:GetActiveWeapon():IsValid() and ply:GetActiveWeapon():GetClass()
     if wep then
         if wep == "scp_sb_keycards_config" or wep == "scp_sb_teams_spawner" or wep == "scp_sb_entities_spawner" then return true end
     end
     return not state
+end
+
+-------------------------
+--  > ShouldCollide <  --
+-------------------------
+function GM:ShouldCollide()
+    return true
 end

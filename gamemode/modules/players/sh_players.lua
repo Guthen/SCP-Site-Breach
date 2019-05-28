@@ -7,10 +7,17 @@ local Player = FindMetaTable( "Player" )
 
 --  > Player Functions <  --
 
+--------------------------------
+--  > Player:IsSpectator() <  --
+--  > RETURNS IF SPECTATOR <  --
+--------------------------------
 function Player:IsSpectator()
     return self:GetNWBool( "SCPSiteBreach:IsSpectator", false )
 end
 
+----------------------------------------------
+--  > Player:SetBottomMessage( message ) <  --
+----------------------------------------------
 function Player:SetBottomMessage( msg )
     if not msg or not isstring( msg ) then return end
 
@@ -21,6 +28,7 @@ end
 
 --------------------------
 --  > Player:IsSCP() <  --
+--  > RETURNS IF SCP <  --
 --------------------------
 function Player:IsSCP()
     if self:Team() == TEAM_UNASSIGNED then return false end
@@ -30,4 +38,12 @@ function Player:IsSCP()
 
     local a = SCPSiteBreach.alliances[ t.alliance ]
     return a and a.isSCP
+end
+
+--------------------------
+--  > Player:Is106() <  --
+--  > RETURNS IF 106 <  --
+--------------------------
+function Player:IsSCP106()
+    return self:Team() == SCP_106
 end

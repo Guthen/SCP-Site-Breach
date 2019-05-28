@@ -34,9 +34,9 @@ net.Receive( "SCPSiteBreach:TeamHUD", function()
         _teamColor.a = s
 
         draw.SimpleTextOutlined( "You play as :", "SCPSiteBreach:Font30", ScrW()/2, ScrH()/4, Color( 255, 255, 255, s ), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, 2, Color( 0, 0, 0, s ) )
-        draw.SimpleTextOutlined( team.GetName( _team ), "SCPSiteBreach:Font50", ScrW()/2, ScrH()/4+40, _teamColor, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, 2, Color( 0, 0, 0, s ) )
+        draw.SimpleTextOutlined( team.GetName( _team ), "SCPSiteBreach:Font60", ScrW()/2, ScrH()/4+40, _teamColor, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, 2, Color( 0, 0, 0, s ) )
         for k, v in pairs( _desc ) do
-            draw.SimpleTextOutlined( v, "SCPSiteBreach:Font25", ScrW()/2, ScrH()/4+55 + 40*k, Color( 255, 255, 255, s ), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, 2, Color( 0, 0, 0, s ) )
+            draw.SimpleTextOutlined( v, "SCPSiteBreach:Font25", ScrW()/2, ScrH()/4+85 + 30*k, Color( 255, 255, 255, s ), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, 2, Color( 0, 0, 0, s ) )
         end
 
         if s <= 0 then hook.Remove( "HUDPaint", "SCPSiteBreach:TeamHUD" ) end
