@@ -73,7 +73,7 @@ hook.Add( "HUDPaint", "SCPSiteBreach:HUD", function()
 	surface.SetMaterial( eyeMat ) -- blink icon
 	surface.DrawTexturedRect( 32, ScrH() - 118, 30, 30 )
 
-	if input.IsControlDown() or LocalPlayer():KeyDown( IN_WALK ) then
+	if input.IsControlDown() or LocalPlayer():KeyDown( IN_WALK ) then -- if crouch or if walk
 		surface.SetMaterial( sneakMat ) -- crouch icon
 	else
 		surface.SetMaterial( runMat ) -- run icon

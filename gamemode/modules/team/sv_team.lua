@@ -34,6 +34,7 @@ SCPSiteBreach.chooseTeam = function()
 
     for k, v in pairs( SCPSiteBreach.GetTeams() ) do
         if TEAM_SPECTATOR == k then continue end
+        if v.spawnByScript then continue end
 
         if SCPSiteBreach.roundActive then -- get mtf/other team if the round is active (respawn time)
             if not v.respawnableTeam then continue end
@@ -49,6 +50,7 @@ SCPSiteBreach.chooseTeam = function()
         for _k, _v in pairs( SCPSiteBreach.GetTeams() ) do
             if TEAM_SPECTATOR == k then continue end
             if k == _k then continue end
+            if _v.spawnByScript then continue end
 
             if SCPSiteBreach.roundActive then -- get mtf/other team if the round is active (respawn time)
                 if not _v.respawnableTeam then continue end
@@ -72,8 +74,11 @@ end
 --  > Server Hooks <  --
 
 hook.Add( "PlayerSpawn", "SCPSiteBreach:TeamHUD", function( ply )
-    timer.Simple( .2, function()
-        net.Start( "SCPSiteBreach:TeamHUD" )
-        net.Send( ply )
-    end )
+    local should = hook.Call( "SCPSiteBreach:ShouldShowTeamHUD", _, ply, team )
+    if should == nil or should == true then
+        timer.Simple( .2, function()
+            net.Start( "SCPSiteBreach:TeamHUD" )
+            net.Send( ply )
+        end )
+    end
 end )

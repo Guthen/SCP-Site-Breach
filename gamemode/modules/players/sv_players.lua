@@ -15,7 +15,7 @@ local Player = FindMetaTable( "Player" )
 ----------------------------------------
 --  > Player:SetSpectator( state ) <  --
 ----------------------------------------
-function Player:SetSpectator( bool )
+function Player:setSpectator( bool )
     self:SetNWBool( "SCPSiteBreach:IsSpectator", bool )
     if bool then
         self:Spawn()
@@ -24,16 +24,10 @@ function Player:SetSpectator( bool )
     end
 end
 
-function Player:SendTo106Dimension()
-    self:Freeze( true )
-
-    self:SetPos( self:GetPos() - Vector( 0, 0, 1 ) )
-end
-
 ----------------------------------------------
 --  > Player:SetSpectatePlayer( target ) <  --
 ----------------------------------------------
-function Player:SetSpectatePlayer( ply )
+function Player:setSpectatePlayer( ply )
     local id = math.random( #player.GetAll() )
     local trg = ply or Entity( id )
     if player.GetCount() > 1 then -- dangerous if it's singleplayer
@@ -53,7 +47,7 @@ end
 -----------------------------------
 --  > Player:ChangeTeam( id ) <  --
 -----------------------------------
-function Player:ChangeTeam( _team )
+function Player:changeTeam( _team )
     local teamTab = SCPSiteBreach.GetTeam( _team )
     if not teamTab then return false end
 

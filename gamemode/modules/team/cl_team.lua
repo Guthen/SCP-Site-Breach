@@ -11,17 +11,18 @@ end
 --  > HUD <  --
 net.Receive( "SCPSiteBreach:TeamHUD", function()
     if not LocalPlayer():IsValid() then return end
+    if LocalPlayer():Team() == TEAM_UNASSIGNED then return end
     local s = 500
     local _team = LocalPlayer():Team()
     local _teamColor = team.GetColor( _team )
     local _desc = SCPSiteBreach.GetTeam( _team ).description
-          if _desc and isstring( _desc ) and string.len( _desc ) > 1 then
+          if _desc and isstring( _desc ) then
               _desc = string.Explode( ". ", _desc )
           else
               _desc =
                 {
                     "Team's description here.",
-                    "Put the value description = ' '  in your team's code.",
+                    "Put the value description = 'your desc' in your team's code.",
                     "See example here : 'https://github.com/Guthen/SCP-Site-Breach/blob/master/gamemode/modules/team/sh_team.lua'.",
                 }
           end

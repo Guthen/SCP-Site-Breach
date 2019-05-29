@@ -3,6 +3,21 @@
 --     > sh_debug.lua <    --
 -----------------------------
 
+SCPSiteBreach.getAlivePlayers = function()
+    local tPl = team.GetPlayers( TEAM_SPECTATOR )
+
+    local p = player.GetPlayers()
+    for k, v in pairs( p ) do
+        for tk, tv in pairs( tPl ) do
+            if v == tv then table.remove( p, k ) end
+        end
+    end
+
+    return p
+end
+
+--  > Concommands <  --
+
 concommand.Add( "scpsb_getmodels", function( _, _, _, arg )
     local fol = "models/" .. ( arg or "" )
     local mdls, folders = file.Find( fol .. "*", "GAME" )
@@ -36,14 +51,14 @@ concommand.Add( "scpsb_round_start", function( ply )
     if ply:IsValid() and not ply:IsSuperAdmin() then return end
     if CLIENT then return end
 
-    GAMEMODE:RoundStart()
+    GAMEMODE:roundStart()
 end )
 
 concommand.Add( "scpsb_round_end", function( ply )
     if ply:IsValid() and not ply:IsSuperAdmin() then return end
     if CLIENT then return end
 
-    GAMEMODE:RoundEnd()
+    GAMEMODE:roundEnd()
 end )
 
 concommand.Add( "scpsb_config", function( ply )
@@ -52,6 +67,7 @@ concommand.Add( "scpsb_config", function( ply )
     ply:Give( "scp_sb_teams_spawner" )
     ply:Give( "scp_sb_entities_spawner" )
     ply:Give( "scp_sb_keycards_config" )
+    ply:Give( "scp_sb_doors_controller" )
 end )
 
 concommand.Add( "scpsb_teleport_everyone", function( ply )
@@ -72,17 +88,17 @@ end )
 concommand.Add( "scpsb_unspectator", function( ply )
     if not ply:IsValid() or not ply:IsSuperAdmin() then return end
 
-    ply:SetSpectator( false )
+    ply:setSpectator( false )
     ply:Spawn()
 end )
 
 concommand.Add( "scpsb_setteam", function( ply, _, args )
     if not ply:IsValid() or not ply:IsSuperAdmin() then return end
 
-    ply:SetSpectator( false )
+    ply:setSpectator( false )
     ply:Spawn()
     ply:StripWeapons()
-    ply:ChangeTeam( tonumber( args[1] ) )
+    ply:changeTeam( tonumber( args[1] ) )
 end )
 
 

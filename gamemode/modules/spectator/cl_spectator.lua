@@ -19,7 +19,7 @@ end
 --------------------
 local canMouse = true
 hook.Add( "HUDPaint", "SCPSiteBreach:SpectatorHUD", function()
-    if not LocalPlayer():IsSpectator() then return end
+    if not LocalPlayer():isSpectator() then return end
 
     if canMouse and ( input.IsMouseDown( MOUSE_LEFT ) or input.IsMouseDown( MOUSE_RIGHT ) ) then
         if input.IsMouseDown( MOUSE_LEFT ) then

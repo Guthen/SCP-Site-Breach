@@ -39,11 +39,11 @@ function GM:PlayerSpawn( ply )
     ply:SetupHands()
 
     --  > Team <  --
-    if not ply:Team() == TEAM_SPECTATOR then return ply:ChangeTeam( ply:Team() ) end
+    if not ply:Team() == TEAM_SPECTATOR then return ply:changeTeam( ply:Team() ) end
 
     local _team = SCPSiteBreach.chooseTeam()
     if _team == TEAM_UNASSIGNED then _team = 1 end
-    if not ply:IsSpectator() then -- don't be a spectator if you haven't played
+    if not ply:isSpectator() then -- don't be a spectator if you haven't played
         while _team == TEAM_SPECTATOR do
             _team = math.random( #SCPSiteBreach.GetTeams() )
         end
@@ -52,7 +52,7 @@ function GM:PlayerSpawn( ply )
         return
     end
 
-    ply:ChangeTeam( _team ) -- sv_players.lua
+    ply:changeTeam( _team ) -- sv_players.lua
 
     --  > Var <  --
     ply:SetNWInt( "SCPSiteBreach:Stamina", 20 )
@@ -60,9 +60,9 @@ function GM:PlayerSpawn( ply )
 
     --  > Blink <  --
     if timer.Exists( "SCPSiteBreach:Blink" .. ply:UserID() ) then timer.Remove( "SCPSiteBreach:Blink" .. ply:UserID() ) end
-    if not ply:IsSCP() then -- if not scp then don't blink
+    if not ply:isSCP() then -- if not scp then don't blink
         timer.Create( "SCPSiteBreach:Blink" .. ply:UserID() , .25, 0, function()
-            if ply:IsSpectator() then return end
+            if ply:isSpectator() then return end
 
             local blink = ply:GetNWInt( "SCPSiteBreach:Blink", 20 ) -- get
             if blink >= 0 then
@@ -94,24 +94,33 @@ function GM:PlayerDeath( ply, inf, atk )
     if ragdoll and ragdoll:IsValid() then
         ragdoll:Remove()
 
-        if ply:IsSpectator() then return end
+        if ply:isSpectator() then return end
         _ragdoll = ents.Create( "prop_ragdoll" )
         _ragdoll:SetModel( ply:GetModel() )
         _ragdoll:SetPos( ply:GetPos() )
         _ragdoll:Spawn()
+        if atk:IsPlayer() and inf.SCPSiteBreachSCP and atk:IsSCP049() then
+            _ragdoll:SetNWBool( "SCPSiteBreach:DeadBy049", true )
+            _ragdoll:SetNWEntity( "SCPSiteBreach:DeadEntity", ply )
+            timer.Simple( 10, function()
+                _ragdoll:SetNWBool( "SCPSiteBreach:DeadBy049", false )
+            end )
+        end
     end
     --  > Weapons <  --
     local weaps = ply:GetWeapons()
     for k, v in pairs( weaps ) do
+        if v.SCPSiteBreachDroppable == false then continue end
+
         local weap = ents.Create( v:GetClass() )
               weap:SetPos( ply:GetPos() + Vector( 0, 0, 25+5*k ) )
               weap:Spawn()
     end
     --  > Sound <  --
-    if not ply:IsSpectator() then ply:EmitSound( "guthen_scp/player/Die" .. math.random( 2, 3 ) .. ".ogg" ) end
+    if not ply:isSpectator() then ply:EmitSound( "guthen_scp/player/Die" .. math.random( 2, 3 ) .. ".ogg" ) end
 
     --  > Var <  --
-    ply:SetSpectator( true )
+    ply:setSpectator( true )
 
     ply:SetNWInt( "SCPSiteBreach:Stamina", 20 )
     ply:SetNWInt( "SCPSiteBreach:Blink", 20 )
@@ -128,7 +137,7 @@ end
 --  > PlayerFootstep <  --
 --------------------------
 function GM:PlayerFootstep( ply, _, foot, sound )
-    if ply:IsSCP() then return false end
+    if ply:isSCP() then return false end
     local id = (foot+1) * math.random( 1, 4 ) -- sound id
 
     local mat = ""
@@ -166,7 +175,7 @@ function GM:PlayerFootstep( ply, _, foot, sound )
                 timer.Create( "SCPSiteBreach:Stamina" .. ply:UserID(), .25, 0, function() -- gain
                     local stamina = ply:GetNWInt( "SCPSiteBreach:Stamina", 20 )
                     ply:SetNWInt( "SCPSiteBreach:Stamina", math.Clamp( stamina + 1, 0, 20 ) )
-                    if stamina + 1 >= 20 or ply:IsSpectator() then timer.Remove( "SCPSiteBreach:Stamina" .. ply:UserID() ) end -- if max then destroy
+                    if stamina + 1 >= 20 or ply:isSpectator() then timer.Remove( "SCPSiteBreach:Stamina" .. ply:UserID() ) end -- if max then destroy
                 end )
             end
         end )
@@ -181,7 +190,7 @@ end
 --  > PlayerCanHearPlayersVoice <  --
 -------------------------------------
 function GM:PlayerCanHearPlayersVoice( list, talk )
-    if list:IsSpectator() and talk:IsSpectator() then return true end -- spectators
+    if list:isSpectator() and talk:isSpectator() then return true end -- spectators
     if list:GetPos():DistToSqr( talk:GetPos() ) < 500*500 then return true, true end -- distance
     return false
 end

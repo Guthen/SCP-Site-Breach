@@ -65,6 +65,9 @@ net.Receive( "SCPSiteBreach:RoundEndHUD", function()
 	local teamWin = net.ReadString()
 		  teamWin = string.len( teamWin ) > 1 and teamWin or "Unknow"
 
+	local totalDeath = net.ReadInt( 16 ) or 0
+	local scpKill = net.ReadInt( 16 ) or 0
+
 	hook.Add( "HUDPaint", "SCPSiteBreach:RoundEndHUD", function()
 		alpha = Lerp( FrameTime()*5, alpha, 255 )
 
@@ -72,10 +75,11 @@ net.Receive( "SCPSiteBreach:RoundEndHUD", function()
 			blackAlpha = Lerp( FrameTime()*3, blackAlpha, 275 )
 		end
 
-		draw.SimpleTextOutlined( "ROUND STATS :", "SCPSiteBreach:Font50", w/2, h/3-15, Color( 255, 255, 255, alpha ), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, 2, Color( 10, 10, 10, alpha ) )
+		draw.SimpleTextOutlined( "ROUND STATISTICS :", "SCPSiteBreach:Font50", w/2, h/3-15, Color( 255, 255, 255, alpha ), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, 2, Color( 10, 10, 10, alpha ) )
 		draw.SimpleTextOutlined( teamWin .. " has win this round !", "SCPSiteBreach:Font30", w/2, h/3+30, Color( 255, 255, 255, alpha ), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, 2, Color( 10, 10, 10, alpha ) )
-		draw.SimpleTextOutlined( "SCPs have killed 3 players", "SCPSiteBreach:Font25", w/2, h/3+60, Color( 255, 255, 255, alpha ), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, 2, Color( 10, 10, 10, alpha ) )
-		draw.SimpleTextOutlined( "2 SCPs have been destroyed or contained", "SCPSiteBreach:Font25", w/2, h/3+90, Color( 255, 255, 255, alpha ), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, 2, Color( 10, 10, 10, alpha ) )
+		draw.SimpleTextOutlined( totalDeath .. " people died during this round.", "SCPSiteBreach:Font25", w/2, h/3+60, Color( 255, 255, 255, alpha ), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, 2, Color( 10, 10, 10, alpha ) )
+		draw.SimpleTextOutlined( "SCPs killed " .. scpKill .. " people.", "SCPSiteBreach:Font25", w/2, h/3+90, Color( 255, 255, 255, alpha ), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, 2, Color( 10, 10, 10, alpha ) )
+		--draw.SimpleTextOutlined( "2 SCPs have been destroyed or contained", "SCPSiteBreach:Font25", w/2, h/3+120, Color( 255, 255, 255, alpha ), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, 2, Color( 10, 10, 10, alpha ) )
 
 		draw.RoundedBox( 0, 0, 0, w, h, Color( 10, 10, 10, blackAlpha ) )
 	end )

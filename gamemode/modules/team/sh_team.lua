@@ -204,6 +204,7 @@ if shouldLoadSCP or shouldLoadSCP == nil then
                 },
             weapons =
                 {
+                    "scp_sb_scp_049",
                 },
             description = "You are the Plague Doctor. Kill everyone on your way. Transform your victims into zombies. Avoid weaponed people. Team Up with other SCPs.",
             color = Color( 247, 66, 69 ),
@@ -212,6 +213,26 @@ if shouldLoadSCP or shouldLoadSCP == nil then
             walkSpd = 115,
             runSpd = 115,
             max = 1,
+            alliance = "SCPs",
+        } )
+    SCP_0492 = SCPSiteBreach.AddTeam( "SCP-049-2",
+        {
+            models =
+                {
+                    "models/player/zombie_classic.mdl",
+                },
+            weapons =
+                {
+                    "",
+                },
+            description = "You are the Plague Doctor's Zombie. Kill everyone on your way. Follow SCP-049 and collaborate together. Avoid weaponed people. Team Up with other SCPs.",
+            color = Color( 247, 66, 69 ),
+            health = 1500,
+            armor = 100,
+            walkSpd = 135,
+            runSpd = 255,
+            max = 0,
+            spawnByScript = true, -- don't spawn by the gamemode
             alliance = "SCPs",
         } )
     -------------------
@@ -225,7 +246,7 @@ if shouldLoadSCP or shouldLoadSCP == nil then
                 },
             weapons =
                 {
-
+                    "scp_sb_scp_106",
                 },
             description = "You are the Old Man. Teleport everyone in your dimension. You can walk trought doors and props. Avoid Tesla Gates and be aware of the Femur Breaker. Team Up with other SCPs.",
             color = Color( 247, 66, 69 ),
@@ -247,6 +268,7 @@ if shouldLoadSCP or shouldLoadSCP == nil then
                 },
             weapons =
                 {
+                    "scp_sb_scp_173",
                 },
             description = "You are the Statue. You can only move on sight break or when people blink. Break the neck of everyone. Avoid the MTF Squad. Team Up with other SCPs.",
             color = Color( 247, 66, 69 ),

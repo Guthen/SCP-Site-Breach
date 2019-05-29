@@ -4,6 +4,9 @@
 -----------------------------
 
 local nReady = 0
+local totalDeath = totalDeath or 0
+local scpKill = scpKill or 0
+
 SCPSiteBreach.roundActive = SCPSiteBreach.roundActive or false
 SCPSiteBreach.roundEnd = SCPSiteBreach.roundEnd or false
 
@@ -35,7 +38,7 @@ net.Receive( "SCPSiteBreach:RoundStartReady", function( _, ply )
                 SCPSiteBreach.roundActive = true
 
                 timer.Create( "SCPSiteBreach:RespawnableTeams", SCPSiteBreach.respawnableTeamsTime, 0, function() -- spawn mtf..
-                    GAMEMODE:SpawnRespawnableTeams()
+                    SCPSiteBreach.SpawnRespawnableTeams()
                 end )
 
                 hook.Call( "SCPSiteBreach:OnRoundStartEnd" )
@@ -57,7 +60,7 @@ end
 -------------------------
 --  > Round Control <  --
 -------------------------
-function GM:RoundStart()
+function GM:roundStart()
     nReady = 0
     SCPSiteBreach.roundActive = false
     SCPSiteBreach.roundEnd = false
@@ -66,7 +69,7 @@ function GM:RoundStart()
 
     RunConsoleCommand( "scpsb_cleanup" ) -- clean up the map
     for _, v in pairs( player.GetAll() ) do
-        v:SetSpectator( false )
+        v:setSpectator( false )
         v:KillSilent()
         v:Lock()
     end
@@ -75,7 +78,7 @@ function GM:RoundStart()
     net.Broadcast()
 end
 
-function GM:RoundEnd( winner )
+function GM:roundEnd( winner )
     if SCPSiteBreach.roundEnd then return end
     SCPSiteBreach.roundEnd = true
 
@@ -83,6 +86,8 @@ function GM:RoundEnd( winner )
 
     net.Start( "SCPSiteBreach:RoundEndHUD" ) -- pop-up the hud
         net.WriteString( winner or "" )
+        net.WriteInt( totalDeath, 16 )
+        net.WriteInt( scpKill, 16 )
     net.Broadcast()
 
     timer.Simple( 10, function() -- start a new game after 10 sec
@@ -90,7 +95,7 @@ function GM:RoundEnd( winner )
     end )
 end
 
-function GM:SpawnRespawnableTeams()
+SCPSiteBreach.SpawnRespawnableTeams = function()
     if not SCPSiteBreach.roundActive then return end
     if SCPSiteBreach.roundEnd then return end
 
@@ -129,8 +134,8 @@ function GM:SpawnRespawnableTeams()
         local _team = table.Random( t )
 
         v:SetSpectator( false )
-        v:SetTeam( _team )
         v:Spawn()
+        v:ChangeTeam( _team )
     end
 end
 
@@ -143,6 +148,11 @@ function GM:PlayerInitialSpawn( ply )
     RunConsoleCommand( "scpsb_round_start" ) -- start the round if not active
 end
 
+hook.Add( "PlayerDeath", "SCPSiteBreach:RoundStats", function( ply, inf, atk )
+    totalDeath = totalDeath + 1 -- add death
+    if not ply:isSCP() and atk:isSCP() then scpKill = scpKill + 1 end -- add scp kill
+end )
+
 hook.Add( "PostPlayerDeath", "SCPSiteBreach:RoundEnd", function( ply )
     timer.Simple( 1, function()
         if not SCPSiteBreach.roundActive then return end
@@ -153,14 +163,19 @@ hook.Add( "PostPlayerDeath", "SCPSiteBreach:RoundEnd", function( ply )
             if SCPSiteBreach.alliances[ k ].isSpectator then continue end
 
             for _, _v in pairs( v ) do
-                if #team.GetPlayers( _v ) > 0 then table.insert( a, k ) end
+                if #team.GetPlayers( _v ) > 0 then a[k] = true end
             end
         end
 
-        -- PrintTable( a )
+        local count = 0
+        local firstK = ""
+        for k, _ in pairs( a ) do
+            count = count + 1
+            if count == 1 then firstK = k end
+        end
 
-        if #a == 1 then
-            GAMEMODE:RoundEnd( a[1] )
+        if count <= 1 then
+            GAMEMODE:roundEnd( firstK )
         end
     end )
 end )

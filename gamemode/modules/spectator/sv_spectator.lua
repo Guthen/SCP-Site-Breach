@@ -7,7 +7,7 @@
 util.AddNetworkString( "SCPSiteBreach:ChangeSpectatorTarget" )
 
 net.Receive( "SCPSiteBreach:ChangeSpectatorTarget", function( _, ply )
-    if not ply:IsSpectator() then return end
+    if not ply:isSpectator() then return end
 
     local isLeft = net.ReadBool()
     if isLeft == nil then return end
@@ -29,12 +29,12 @@ end )
 --  > PlayerCanPickupItem <  --
 -------------------------------
 function GM:PlayerCanPickupItem( ply )
-    return not ply:IsSpectator()
+    return not ply:isSpectator()
 end
 
 ---------------------------
 --  > PostPlayerDeath <  --
 ---------------------------
 hook.Add( "PostPlayerDeath", "SCPSiteBreach:SpectateMode", function( ply )
-    ply:SetSpectatePlayer() -- sv_players.lua
+    ply:setSpectatePlayer() -- sv_players.lua
 end )

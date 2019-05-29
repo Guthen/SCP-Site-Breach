@@ -1,5 +1,5 @@
-SWEP.PrintName			    = "SCP:SB - Keycard LVL 1" -- This will be shown in the spawn menu, and in the weapon selection menu
-SWEP.Author			        = "Guthen" -- These two options will be shown when you have the weapon highlighted in the weapon selection menu
+SWEP.PrintName			    = "SCP:SB - Keycard LVL 1" 
+SWEP.Author			        = "Guthen"
 SWEP.Instructions		    = "You have clearance level one !"
 
 SWEP.Spawnable              = true

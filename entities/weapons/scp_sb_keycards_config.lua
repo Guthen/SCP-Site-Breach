@@ -1,5 +1,5 @@
-SWEP.PrintName			    = "SCP:SB - Keycard Config" -- This will be shown in the spawn menu, and in the weapon selection menu
-SWEP.Author			        = "Guthen" -- These two options will be shown when you have the weapon highlighted in the weapon selection menu
+SWEP.PrintName			    = "SCP:SB - Keycard Config"
+SWEP.Author			        = "Guthen"
 SWEP.Instructions		    = "Left click to set an access from a button. Right click to remove an access from a button. Reload to change the access level."
 
 SWEP.Spawnable              = true
@@ -28,6 +28,7 @@ SWEP.ViewModel			    = "models/weapons/c_stunstick.mdl"
 SWEP.WorldModel			    = "models/weapons/w_stunbaton.mdl"
 
 SWEP.SCPSiteBreachLVL       = 5
+SWEP.SCPSiteBreachDroppable = false -- if you want to drop it after death
 
 --  > Functions <  --
 
@@ -85,6 +86,7 @@ end
 function SWEP:DrawHUD()
     draw.SimpleText( "Current LVL: " .. ply:GetNWInt( "SCPSiteBreach:CurAccess", 1 ), "DermaDefault", ScrW()/2+50, ScrH()/2, Color( 255, 255, 255 ), TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER )
     local trg = self:GetOwner():GetEyeTrace().Entity
+    if not trg or not trg:IsValid() then return end
     draw.SimpleText( "Target Class: " .. trg:GetClass() or "nil", "DermaDefault", ScrW()/2+50, ScrH()/2+15, Color( 255, 255, 255 ), TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER )
     if trg:IsValid() and trg:GetNWInt( "SCPSiteBreach:LVL", 0 ) then
         draw.SimpleText( "Target LVL: " .. trg:GetNWInt( "SCPSiteBreach:LVL", 0 ), "DermaDefault", ScrW()/2+50, ScrH()/2+30, Color( 255, 255, 255 ), TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER )

@@ -1,5 +1,5 @@
-SWEP.PrintName			    = "SCP:SB - Teams Spawner" -- This will be shown in the spawn menu, and in the weapon selection menu
-SWEP.Author			        = "Guthen" -- These two options will be shown when you have the weapon highlighted in the weapon selection menu
+SWEP.PrintName			    = "SCP:SB - Teams Spawner"
+SWEP.Author			        = "Guthen"
 SWEP.Instructions		    = "Left click to add an team spawn. Right click to remove an team spawn. Reload to change the selected team."
 
 SWEP.Spawnable              = true
@@ -26,6 +26,8 @@ SWEP.DrawCrosshair		    = true
 
 SWEP.ViewModel			    = "models/weapons/v_pistol.mdl"
 SWEP.WorldModel			    = "models/weapons/w_pistol.mdl"
+
+SWEP.SCPSiteBreachDroppable = false -- if you want to drop it after death
 
 --  > Variables <  --
 local teams = SCPSiteBreach.GetTeams()
@@ -75,5 +77,5 @@ end
 
 function SWEP:DrawHUD()
     draw.SimpleText( "Current Team: " .. team.GetName( curTeam ), "DermaDefault", ScrW()/2+50, ScrH()/2, Color( 255, 255, 255 ), TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER )
-    draw.SimpleText( "# Teams Spawners: " .. #ents.FindByClass( "scp_sb_team_spawner" ), "DermaDefault", ScrW()/2+50, ScrH()/2+15, Color( 255, 255, 255 ), TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER )
+    --draw.SimpleText( "# Teams Spawners: " .. #ents.FindByClass( "scp_sb_team_spawner" ), "DermaDefault", ScrW()/2+50, ScrH()/2+15, Color( 255, 255, 255 ), TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER )
 end
